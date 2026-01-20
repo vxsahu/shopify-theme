@@ -11,7 +11,8 @@
   class="site-nav site-navigation small--hide"
   {% unless disable_aria %}
     role="navigation" aria-label="Primary"
-  {% endunless %}>
+  {% endunless %}
+>
   {%- for link in main_menu.links limit: limit offset: offset -%}
     {%- liquid
       assign has_dropdown = false
@@ -26,103 +27,503 @@
 
     <li
       class="site-nav__item site-nav__expanded-item{% if has_dropdown %} site-nav--has-dropdown{% endif %}{% if is_megamenu %} site-nav--is-megamenu{% endif %}"
-      {% if has_dropdown %}aria-haspopup="true"{% endif %}>
+      {% if has_dropdown %}
+        aria-haspopup="true"
+      {% endif %}
+    >
+      {%- if has_dropdown -%}
+        {%- comment %} Dropdown Menu with Details Element {%- endcomment %}
+        <details
+          data-hover="true"
+          id="site-nav-item--{{ forloop.index }}"
+          class="site-nav__details"
+          aria-expanded="false"
+        >
+          <summary
+            data-link="{{ link.url }}"
+            aria-expanded="false"
+            aria-controls="site-nav-item--{{ forloop.index }}"
+            class="site-nav__link site-nav__link--underline site-nav__link--has-dropdown"
+          >
+            {{ link.title }}
+            <svg
+              aria-hidden="true"
+              focusable="false"
+              role="presentation"
+              class="icon icon--wide icon-chevron-down"
+              viewBox="0 0 28 16"
+            >
+              <path d="m1.57 1.59 12.76 12.77L27.1 1.59" stroke-width="2" stroke="#000" fill="none"/>
+            </svg>
+          </summary>
 
-      <a href="{{ link.url }}" class="site-nav__link site-nav__link--underline{% if has_dropdown %} site-nav__link--has-dropdown{% endif %}">
-        {{ link.title }}
-      </a>
-      {%- if is_megamenu -%}
-        {%- assign previous_column_type = '' -%}
-        {%- assign animation_column = 1 -%}
+          {%- if is_megamenu -%}
+            {%- comment %} ========== MEGAMENU ========== {%- endcomment %}
+            {%- assign featured_collection = null -%}
+            {%- assign featured_link_url = '' -%}
+            {%- assign collection_count = 0 -%}
 
-        <div class="site-nav__dropdown megamenu text-left">
-          <div class="page-width">
-            <div class="grid{% if dropdown_alignment == 'center' %} grid--center{% endif %}">
-              <div class="grid__item medium-up--one-fifth appear-animation appear-delay-{{ animation_column }}">
-                {%- assign animation_column = animation_column | plus: 1 -%}
+            {%- for childlink in link.links -%}
+              {%- liquid
+                assign is_collection = false
+                assign col_handle = childlink.object.handle
+                if childlink.url contains '/collections/' and collections[col_handle] != blank
+                  assign is_collection = true
+                endif
+              -%}
 
-                {%- for childlink in link.links -%}
-                  {%- liquid
-                    assign create_new_column = false
+              {%- if is_collection -%}
+                {%- assign collection_count = collection_count | plus: 1 -%}
+                {%- assign col = collections[col_handle] -%}
 
-                    if childlink.levels > 0 and forloop.index != 1
-                      assign create_new_column = true
-                    endif
+                {%- if featured_collection == null and col.image != blank -%}
+                  {%- assign featured_collection = col -%}
+                  {%- assign featured_link_url = childlink.url -%}
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
 
-                    if childlink.levels == 0 and previous_column_type == 'full'
-                      assign create_new_column = true
-                    endif
-                  -%}
+            <li class="site-nav__dropdown megamenu shop-art-menu">
+              <div class="megamenu-container">
+                <div class="megamenu-grid">
+                  {%- comment %} Left Section - Menu Links {%- endcomment %}
+                  <div class="megamenu-left appear-animation appear-delay-1">
+                    <ul style="list-style: none; padding: 0;">
+                      {%- for childlink in link.links -%}
+                        {%- liquid
+                          assign is_collection = false
+                          assign col_handle = childlink.object.handle
+                          if childlink.url contains '/collections/' and collections[col_handle] != blank
+                            assign is_collection = true
+                          endif
+                        -%}
 
-                  {%- if create_new_column -%}
-                    </div><div class="grid__item medium-up--one-fifth appear-animation appear-delay-{{ animation_column }}">
-                    {%- assign animation_column = animation_column | plus: 1 -%}
-                  {%- endif -%}
+                        {%- unless is_collection -%}
+                          <li style="margin-bottom: 12px;">
+                            <a
+                              href="{{ childlink.url }}"
+                              style="display: block; font-weight: bold; border-bottom: 2px solid #C19434; padding-bottom: 4px; text-decoration: none; color: #000; text-transform: none;"
+                            >
+                              {{ childlink.title }}
+                            </a>
+                            {%- if childlink.links.size > 0 -%}
+                              <p
+                                class="explanation-text"
+                                style="font-size: 10px; color: #666; margin: 4px 0 0; font-weight: normal; text-transform: uppercase;"
+                              >
+                                {{ childlink.links.first.title }}
+                              </p>
+                            {%- endif -%}
+                          </li>
+                        {%- endunless -%}
+                      {%- endfor -%}
 
-                  {%- if childlink.levels > 0 and childlink.url contains '/collections/' -%}
-                    {%- if collections[childlink.object.handle].image != blank -%}
-                      <a
-                        href="{{ childlink.url }}"
-                        class="megamenu__colection-image"
-                        aria-label="{{collections[childlink.object.handle].title}}"
-                        style="background-image: url({{ collections[childlink.object.handle].image | img_url: '400x' }})"></a>
-                    {%- endif -%}
-                  {%- endif -%}
-
-                  <div class="h5">
-                    <a href="{{ childlink.url }}" class="site-nav__dropdown-link site-nav__dropdown-link--top-level">{{ childlink.title }}</a>
+                      {%- comment %} Add "All Collections" link {%- endcomment %}
+                      <li style="margin-bottom: 12px;">
+                        <a
+                          href="{{ link.url }}"
+                          style="display: block; font-weight: bold; border-bottom: 2px solid #C19434; padding-bottom: 4px; text-decoration: none; color: #000; text-transform: none;"
+                        >
+                          All {{ link.title }}
+                        </a>
+                        <p
+                          class="explanation-text"
+                          style="font-size: 10px; color: #666; margin: 4px 0 0; font-weight: normal; text-transform: uppercase;"
+                        >
+                          Everything in one place
+                        </p>
+                      </li>
+                    </ul>
                   </div>
 
-                  {%- liquid
-                    if childlink.levels > 0
-                      assign previous_column_type = 'full'
-                    else
-                      assign previous_column_type = 'single'
-                    endif
-                  -%}
+                  {%- comment %} Center Section - Collection Grid {%- endcomment %}
+                  <div class="megamenu-center appear-animation appear-delay-2">
+                    <div class="wrap-grid-title">
+                      <div class="grid-6x2">
+                        {%- assign displayed_count = 0 -%}
+                        {%- for childlink in link.links -%}
+                          {%- liquid
+                            assign is_collection = false
+                            assign col_handle = childlink.object.handle
+                            if childlink.url contains '/collections/' and collections[col_handle] != blank
+                              assign is_collection = true
+                            endif
+                          -%}
 
-                  {%- for grandchildlink in childlink.links -%}
-                    <div>
-                      <a href="{{ grandchildlink.url }}" class="site-nav__dropdown-link">
-                        {{grandchildlink.title}}
-                      </a>
+                          {%- if is_collection and displayed_count < 11 -%}
+                            {%- assign col = collections[col_handle] -%}
+                            {%- assign displayed_count = displayed_count | plus: 1 -%}
+
+                            <div class="shop-art-item collection-items">
+                              <a href="{{ childlink.url }}">
+                                {%- if col.image != blank -%}
+                                  <img
+                                    class="shop-art-img"
+                                    src="{{ col.image | image_url: width: 160, height: 160, crop: 'center' }}"
+                                    alt="{{ col.title | escape }}"
+                                    loading="lazy"
+                                    width="80"
+                                    height="80"
+                                  >
+                                {%- else -%}
+                                  <div class="shop-art-img shop-art-img--placeholder">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                      <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                                      <path d="m21 15-5-5L5 21"/>
+                                    </svg>
+                                  </div>
+                                {%- endif -%}
+                                <p>{{ col.title }}</p>
+                              </a>
+                            </div>
+                          {%- endif -%}
+                        {%- endfor -%}
+
+                        {%- comment %} See All Link {%- endcomment %}
+                        <div class="shop-art-item collection-items">
+                          <a href="{{ link.url }}">
+                            <img
+                              class="shop-art-img"
+                              src="{{ 'see-all-plus.webp' | asset_url }}"
+                              alt="See All"
+                              width="80"
+                              height="80"
+                              loading="lazy"
+                              onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+                            >
+                            <div class="shop-art-img shop-art-img--placeholder" style="display:none;">
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                              </svg>
+                            </div>
+                            <p>See All</p>
+                          </a>
+                        </div>
+                      </div>
                     </div>
-                  {%- endfor -%}
-                {%- endfor -%}
-              </div>
-            </div>
-          </div>
-        </div>
-      {%- elsif has_dropdown -%}
-        <ul class="site-nav__dropdown text-left">
-          {%- for childlink in link.links -%}
-            {%- liquid
-              assign has_sub_dropdown = false
-              if childlink.links != blank
-                assign has_sub_dropdown = true
-              endif
-            -%}
+                  </div>
 
-            <li class="{% if has_sub_dropdown %} site-nav__deep-dropdown-trigger{% endif %}">
-              <a href="{{ childlink.url }}" class="site-nav__dropdown-link site-nav__dropdown-link--second-level{% if has_sub_dropdown %} site-nav__dropdown-link--has-children{% endif %}">
-                {{ childlink.title | escape }}
-                {%- if has_sub_dropdown -%}
-                  <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon--wide icon-chevron-down" viewBox="0 0 28 16"><path d="M1.57 1.59l12.76 12.77L27.1 1.59" stroke-width="2" stroke="#000" fill="none" fill-rule="evenodd"/></svg>
-                {%- endif -%}
-              </a>
-              {%- if has_sub_dropdown -%}
-                <ul class="site-nav__deep-dropdown">
-                  {%- for grandchildlink in childlink.links -%}
-                    <li>
-                      <a href="{{ grandchildlink.url }}" class="site-nav__dropdown-link">{{ grandchildlink.title | escape }}</a>
-                    </li>
-                  {%- endfor -%}
-                </ul>
-              {%- endif -%}
+                  {%- comment %} Right Section - Featured Collection {%- endcomment %}
+                  <div class="megamenu-right appear-animation appear-delay-3">
+                    {%- if featured_collection != null -%}
+                      <div class="featured-collection">
+                        <a href="{{ featured_link_url }}">
+                          <img
+                            class="featured-collection-img"
+                            src="{{ featured_collection.image | image_url: width: 400, height: 500, crop: 'center' }}"
+                            alt="{{ featured_collection.title | escape }}"
+                            loading="lazy"
+                            width="220"
+                            height="275"
+                          >
+                          <div class="title-overlay">{{ featured_collection.title }}</div>
+                        </a>
+                      </div>
+                    {%- endif -%}
+                  </div>
+                </div>
+              </div>
             </li>
-          {%- endfor -%}
-        </ul>
+
+          {%- else -%}
+            {%- comment %} ========== STANDARD DROPDOWN ========== {%- endcomment %}
+            <ul class="site-nav__dropdown text-left">
+              {%- for childlink in link.links -%}
+                {%- liquid
+                  assign has_sub_dropdown = false
+                  if childlink.links != blank
+                    assign has_sub_dropdown = true
+                  endif
+                -%}
+                <li class="{% if has_sub_dropdown %}site-nav__deep-dropdown-trigger{% endif %}">
+                  <a
+                    href="{{ childlink.url }}"
+                    class="site-nav__dropdown-link site-nav__dropdown-link--second-level{% if has_sub_dropdown %} site-nav__dropdown-link--has-children{% endif %}"
+                  >
+                    {{ childlink.title | escape }}
+                    {%- if has_sub_dropdown -%}
+                      <svg
+                        aria-hidden="true"
+                        focusable="false"
+                        role="presentation"
+                        class="icon icon--wide icon-chevron-down"
+                        viewBox="0 0 28 16"
+                      >
+                        <path d="m1.57 1.59 12.76 12.77L27.1 1.59" stroke-width="2" stroke="#000" fill="none"/>
+                      </svg>
+                    {%- endif -%}
+                  </a>
+                  {%- if has_sub_dropdown -%}
+                    <ul class="site-nav__deep-dropdown">
+                      {%- for grandchildlink in childlink.links -%}
+                        <li>
+                          <a href="{{ grandchildlink.url }}" class="site-nav__dropdown-link">
+                            {{ grandchildlink.title | escape }}
+                          </a>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  {%- endif -%}
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </details>
+
+      {%- else -%}
+        {%- comment %} Simple Link (No Dropdown) {%- endcomment %}
+        <a href="{{ link.url }}" class="site-nav__link site-nav__link--underline">
+          {{ link.title }}
+        </a>
       {%- endif -%}
     </li>
   {%- endfor -%}
 </ul>
+
+<style>
+  /* ========================================
+   MEGAMENU STYLES
+   ======================================== */
+
+  /* Container */
+  .megamenu-container {
+    padding: 24px 32px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .megamenu-grid {
+    display: grid;
+    grid-template-columns: 180px 1fr 220px;
+    gap: 32px;
+    align-items: start;
+  }
+
+  /* Left Section */
+  .megamenu-left {
+    border-right: 1px solid rgba(0, 0, 0, 0.08);
+    padding-right: 20px;
+  }
+
+  .megamenu-left ul {
+    margin: 0;
+  }
+
+  .megamenu-left a {
+    transition: color 0.2s ease;
+  }
+
+  .megamenu-left a:hover {
+    color: #c19434 !important;
+  }
+
+  .explanation-text {
+    letter-spacing: 0.05em;
+  }
+
+  /* Center Section - Collection Grid */
+  .megamenu-center {
+    flex: 1;
+  }
+
+  .wrap-grid-title {
+    width: 100%;
+  }
+
+  .grid-6x2 {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px 12px;
+  }
+
+  .shop-art-item,
+  .collection-items {
+    text-align: center;
+  }
+
+  .collection-items a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.25s ease;
+  }
+
+  .collection-items a:hover {
+    transform: translateY(-4px);
+  }
+
+  .shop-art-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #f5f5f5;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.25s ease;
+  }
+
+  .collection-items a:hover .shop-art-img {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  .shop-art-img--placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(0, 0, 0, 0.3);
+  }
+
+  .shop-art-img--placeholder svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .collection-items p {
+    font-size: 11px;
+    margin: 8px 0 0;
+    color: rgba(0, 0, 0, 0.75);
+    line-height: 1.3;
+    max-width: 90px;
+  }
+
+  /* Right Section - Featured Collection */
+  .megamenu-right {
+    min-width: 200px;
+  }
+
+  .featured-collection {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+
+  .featured-collection:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    transform: translateY(-4px);
+  }
+
+  .featured-collection a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+  }
+
+  .featured-collection-img {
+    width: 100%;
+    aspect-ratio: 4/5;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+
+  .featured-collection:hover .featured-collection-img {
+    transform: scale(1.05);
+  }
+
+  .title-overlay {
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #c19434 0%, #a67c2e 100%);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-align: center;
+  }
+
+  /* Animation */
+  .appear-animation {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+
+  .site-nav__details[open] .appear-animation,
+  .site-nav--has-dropdown:hover .appear-animation {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .appear-delay-1 {
+    transition-delay: 0.05s;
+  }
+  .appear-delay-2 {
+    transition-delay: 0.1s;
+  }
+  .appear-delay-3 {
+    transition-delay: 0.15s;
+  }
+
+  /* Details Element Reset */
+  .site-nav__details {
+    position: relative;
+  }
+
+  .site-nav__details summary {
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .site-nav__details summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .site-nav__details[open] > .megamenu,
+  .site-nav__details[open] > .site-nav__dropdown {
+    display: block;
+  }
+
+  /* Megamenu Dropdown Positioning */
+  .site-nav__details > .megamenu {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 100%;
+    background: #fff;
+    min-width: 900px;
+    z-index: 100;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    border-radius: 0 0 8px 8px;
+    display: none;
+  }
+
+  /* Responsive */
+  @media screen and (max-width: 1200px) {
+    .megamenu-grid {
+      grid-template-columns: 160px 1fr 180px;
+      gap: 20px;
+    }
+
+    .grid-6x2 {
+      grid-template-columns: repeat(5, 1fr);
+    }
+
+    .shop-art-img {
+      width: 70px;
+      height: 70px;
+    }
+  }
+
+  @media screen and (max-width: 1024px) {
+    .megamenu-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .megamenu-left {
+      border-right: none;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      padding-right: 0;
+      padding-bottom: 16px;
+    }
+
+    .grid-6x2 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>
