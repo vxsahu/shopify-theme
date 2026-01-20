@@ -1,3 +1,5 @@
+{%- render 'megamenu-styles' -%}
+
 {%- liquid
   unless limit
     assign limit = main_menu.links.size
@@ -11,7 +13,8 @@
   class="site-nav site-navigation small--hide"
   {% unless disable_aria %}
     role="navigation" aria-label="Primary"
-  {% endunless %}>
+  {% endunless %}
+>
   {%- for link in main_menu.links limit: limit offset: offset -%}
     {%- liquid
       assign has_dropdown = false
@@ -26,69 +29,121 @@
 
     <li
       class="site-nav__item site-nav__expanded-item{% if has_dropdown %} site-nav--has-dropdown{% endif %}{% if is_megamenu %} site-nav--is-megamenu{% endif %}"
-      {% if has_dropdown %}aria-haspopup="true"{% endif %}>
-
-      <a href="{{ link.url }}" class="site-nav__link site-nav__link--underline{% if has_dropdown %} site-nav__link--has-dropdown{% endif %}">
+      {% if has_dropdown %}
+        aria-haspopup="true"
+      {% endif %}
+    >
+      <a
+        href="{{ link.url }}"
+        class="site-nav__link site-nav__link--underline{% if has_dropdown %} site-nav__link--has-dropdown{% endif %}"
+      >
         {{ link.title }}
       </a>
       {%- if is_megamenu -%}
-        {%- assign previous_column_type = '' -%}
-        {%- assign animation_column = 1 -%}
+        {%- assign collection_count = 0 -%}
+        {%- assign featured_collection = null -%}
 
-        <div class="site-nav__dropdown megamenu text-left">
+        <div class="site-nav__dropdown megamenu megamenu--modern text-left">
           <div class="page-width">
-            <div class="grid{% if dropdown_alignment == 'center' %} grid--center{% endif %}">
-              <div class="grid__item medium-up--one-fifth appear-animation appear-delay-{{ animation_column }}">
-                {%- assign animation_column = animation_column | plus: 1 -%}
-
+            <div class="megamenu__layout">
+              {%- comment -%} LEFT COLUMN: Menu Links {%- endcomment -%}
+              <div class="megamenu__sidebar appear-animation appear-delay-1">
                 {%- for childlink in link.links -%}
-                  {%- liquid
-                    assign create_new_column = false
-
-                    if childlink.levels > 0 and forloop.index != 1
-                      assign create_new_column = true
-                    endif
-
-                    if childlink.levels == 0 and previous_column_type == 'full'
-                      assign create_new_column = true
-                    endif
-                  -%}
-
-                  {%- if create_new_column -%}
-                    </div><div class="grid__item medium-up--one-fifth appear-animation appear-delay-{{ animation_column }}">
-                    {%- assign animation_column = animation_column | plus: 1 -%}
+                  {%- if childlink.levels == 0 -%}
+                    <a href="{{ childlink.url }}" class="megamenu__sidebar-link">
+                      <span class="megamenu__sidebar-title">{{ childlink.title }}</span>
+                      {%- if childlink.links.size > 0 -%}
+                        <span class="megamenu__sidebar-subtitle">{{ childlink.links.first.title }}</span>
+                      {%- endif -%}
+                    </a>
                   {%- endif -%}
-
-                  {%- if childlink.levels > 0 and childlink.url contains '/collections/' -%}
-                    {%- if collections[childlink.object.handle].image != blank -%}
-                      <a
-                        href="{{ childlink.url }}"
-                        class="megamenu__colection-image"
-                        aria-label="{{collections[childlink.object.handle].title}}"
-                        style="background-image: url({{ collections[childlink.object.handle].image | img_url: '400x' }})"></a>
-                    {%- endif -%}
-                  {%- endif -%}
-
-                  <div class="h5">
-                    <a href="{{ childlink.url }}" class="site-nav__dropdown-link site-nav__dropdown-link--top-level">{{ childlink.title }}</a>
-                  </div>
-
-                  {%- liquid
-                    if childlink.levels > 0
-                      assign previous_column_type = 'full'
-                    else
-                      assign previous_column_type = 'single'
-                    endif
-                  -%}
-
-                  {%- for grandchildlink in childlink.links -%}
-                    <div>
-                      <a href="{{ grandchildlink.url }}" class="site-nav__dropdown-link">
-                        {{grandchildlink.title}}
-                      </a>
-                    </div>
-                  {%- endfor -%}
                 {%- endfor -%}
+              </div>
+
+              {%- comment -%} CENTER COLUMN: Collection Images Grid {%- endcomment -%}
+              <div class="megamenu__collections appear-animation appear-delay-2">
+                <div class="megamenu__collections-grid">
+                  {%- for childlink in link.links -%}
+                    {%- if childlink.url contains '/collections/' -%}
+                      {%- assign col_handle = childlink.object.handle -%}
+                      {%- assign col = collections[col_handle] -%}
+
+                      {%- comment -%} Save first collection with image as featured {%- endcomment -%}
+                      {%- if featured_collection == null and col.image != blank -%}
+                        {%- assign featured_collection = col -%}
+                      {%- endif -%}
+
+                      <a href="{{ childlink.url }}" class="megamenu__collection-tile">
+                        <div class="megamenu__collection-image-wrap">
+                          {%- if col.image != blank -%}
+                            <img
+                              src="{{ col.image | img_url: '200x200', crop: 'center' }}"
+                              alt="{{ col.title }}"
+                              class="megamenu__collection-img"
+                              width="90"
+                              height="90"
+                              loading="lazy"
+                            >
+                          {%- elsif col.products.first.featured_image != blank -%}
+                            <img
+                              src="{{ col.products.first.featured_image | img_url: '200x200', crop: 'center' }}"
+                              alt="{{ col.title }}"
+                              class="megamenu__collection-img"
+                              width="90"
+                              height="90"
+                              loading="lazy"
+                            >
+                          {%- else -%}
+                            <div class="megamenu__collection-placeholder">
+                              <svg viewBox="0 0 20 20">
+                                <path d="M15.651 12.851c-2.13 1.94-5.17 2.91-9.07 2.91-.91 0-1.87-.04-2.88-.17-.38-.04-.75-.09-1.12-.16-.03 1.61.21 3.71.54 5.09.01.04.02.09.03.13.02.08.04.14.06.18h.02c.02.03.04.04.05.04h3.49c.12-.09.17-.19.21-.3l.09-.27.15-.51c.07-.25.11-.45.14-.58v-.01l.03-.13.02-.08c.03.05.06.1.1.16.2.31.63.98 1.55 1.68.91.69 2.27 1.36 4.23 1.36 4.84 0 7.11-2.01 7.89-3.56.4-.79.54-1.47.54-1.83 0-.17-.02-.26-.02-.26l-.29-1.53-.6.09c-.44.07-.87.11-1.29.13-.09-.71-.24-1.47-.45-2.2-.1-.32-.21-.63-.33-.92z"/>
+                              </svg>
+                            </div>
+                          {%- endif -%}
+                        </div>
+                        <span class="megamenu__collection-title">{{ childlink.title }}</span>
+                      </a>
+                      {%- assign collection_count = collection_count | plus: 1 -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+
+                  {%- comment -%} See All tile {%- endcomment -%}
+                  <a href="{{ link.url }}" class="megamenu__collection-tile megamenu__collection-tile--see-all">
+                    <div class="megamenu__collection-image-wrap">
+                      <div class="megamenu__see-all-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <line x1="12" y1="5" x2="12" y2="19"></line>
+                          <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                      </div>
+                    </div>
+                    <span class="megamenu__collection-title">See All</span>
+                  </a>
+                </div>
+              </div>
+
+              {%- comment -%} RIGHT COLUMN: Featured Product/Collection {%- endcomment -%}
+              <div class="megamenu__featured appear-animation appear-delay-3">
+                {%- if featured_collection != null -%}
+                  {%- assign featured_product = featured_collection.products.first -%}
+                  {%- if featured_product != blank -%}
+                    <a href="{{ featured_product.url }}" class="megamenu__featured-card">
+                      <div class="megamenu__featured-image-wrap">
+                        <img
+                          src="{{ featured_product.featured_image | img_url: '400x500', crop: 'center' }}"
+                          alt="{{ featured_product.title }}"
+                          class="megamenu__featured-img"
+                          width="200"
+                          height="280"
+                          loading="lazy"
+                        >
+                      </div>
+                      <div class="megamenu__featured-content">
+                        <span class="megamenu__featured-title">{{ featured_product.title }}</span>
+                      </div>
+                    </a>
+                  {%- endif -%}
+                {%- endif -%}
               </div>
             </div>
           </div>
@@ -104,17 +159,30 @@
             -%}
 
             <li class="{% if has_sub_dropdown %} site-nav__deep-dropdown-trigger{% endif %}">
-              <a href="{{ childlink.url }}" class="site-nav__dropdown-link site-nav__dropdown-link--second-level{% if has_sub_dropdown %} site-nav__dropdown-link--has-children{% endif %}">
+              <a
+                href="{{ childlink.url }}"
+                class="site-nav__dropdown-link site-nav__dropdown-link--second-level{% if has_sub_dropdown %} site-nav__dropdown-link--has-children{% endif %}"
+              >
                 {{ childlink.title | escape }}
                 {%- if has_sub_dropdown -%}
-                  <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon--wide icon-chevron-down" viewBox="0 0 28 16"><path d="M1.57 1.59l12.76 12.77L27.1 1.59" stroke-width="2" stroke="#000" fill="none" fill-rule="evenodd"/></svg>
+                  <svg
+                    aria-hidden="true"
+                    focusable="false"
+                    role="presentation"
+                    class="icon icon--wide icon-chevron-down"
+                    viewBox="0 0 28 16"
+                  >
+                    <path d="M1.57 1.59l12.76 12.77L27.1 1.59" stroke-width="2" stroke="#000" fill="none" fill-rule="evenodd"/>
+                  </svg>
                 {%- endif -%}
               </a>
               {%- if has_sub_dropdown -%}
                 <ul class="site-nav__deep-dropdown">
                   {%- for grandchildlink in childlink.links -%}
                     <li>
-                      <a href="{{ grandchildlink.url }}" class="site-nav__dropdown-link">{{ grandchildlink.title | escape }}</a>
+                      <a href="{{ grandchildlink.url }}" class="site-nav__dropdown-link">
+                        {{- grandchildlink.title | escape -}}
+                      </a>
                     </li>
                   {%- endfor -%}
                 </ul>
