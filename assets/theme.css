@@ -2424,6 +2424,7 @@ html input[disabled] {
   user-select: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+  appearance: none;
   border-radius: var(--buttonRadius);
   color: #ffffff;
   color: var(--colorBtnPrimaryText);
