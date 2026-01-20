@@ -58,7 +58,7 @@
   {% endif %}
 
   {% unless section.settings.mega_menu_images %}
-    .megamenu__colection-image {
+    .megamenu__collection-image {
       display: none;
     }
   {% endunless %}
@@ -72,18 +72,9 @@
       border-top: 0;
     }
   {%- endif -%}
-
-  {%- if settings.color_announcement == settings.color_body_bg -%}
-    .announcement-bar {
-      border-bottom: 1px solid;
-    }
-  {%- endif -%}
 </style>
 
 <div data-section-id="{{ section.id }}" data-section-type="header">
-  {%- if overlay_header or section.settings.announcement_above_header -%}
-    {%- render 'announcement-bar', section: section -%}
-  {%- endif -%}
 
   {%- unless overlay_header -%}
     {%- if section.settings.show_locale_selector or section.settings.show_currency_selector or section.settings.toolbar_social or section.settings.toolbar_menu != blank -%}
@@ -124,8 +115,8 @@
             {%- endif -%}
 
             {%- if logo_alignment == 'left' and section.settings.main_menu_alignment != 'left-drawer' -%}
-              <div class="header-item header-item--navigation{% if section.settings.main_menu_alignment == 'left-center' %} text-center{% endif %}">
-                {%- render 'header-desktop-nav', main_menu: main_menu, dropdown_alignment: dropdown_alignment -%}
+              <div class="header-item header-item--navigation{% if section.settings.main_menu_alignment == 'left-center' %} text-center{% endif %}" {% unless disable_aria %}role="navigation" aria-label="Primary"{% endunless %}>
+                {%- render 'header-desktop-nav', main_menu: main_menu, dropdown_alignment: dropdown_alignment, hover_menu: section.settings.hover_menu -%}
               </div>
             {%- endif -%}
 
@@ -135,7 +126,7 @@
                   {%- if settings.search_enable -%}
                     <div class="site-nav small--hide">
                       <a href="{{ routes.search_url }}" class="site-nav__link site-nav__link--icon js-search-header">
-                        <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-search" viewBox="0 0 64 64"><path d="M47.16 28.58A18.58 18.58 0 1 1 28.58 10a18.58 18.58 0 0 1 18.58 18.58zM54 54L41.94 42"/></svg>
+                        <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-search" viewBox="0 0 64 64"><title>icon-search</title><path d="M47.16 28.58A18.58 18.58 0 1 1 28.58 10a18.58 18.58 0 0 1 18.58 18.58ZM54 54 41.94 42"/></svg>
                         <span class="icon__fallback-text">{{ 'general.search.title' | t }}</span>
                       </a>
                     </div>
@@ -143,7 +134,7 @@
                 {%- endif -%}
 
                 {%- if section.settings.main_menu_alignment == 'center-left' -%}
-                  {%- render 'header-desktop-nav', main_menu: main_menu, dropdown_alignment: dropdown_alignment -%}
+                  {%- render 'header-desktop-nav', main_menu: main_menu, dropdown_alignment: dropdown_alignment, hover_menu: section.settings.hover_menu -%}
                 {%- endif -%}
 
                 <div class="site-nav{% unless section.settings.main_menu_alignment == 'center-drawer' %} medium-up--hide{% endunless %}">
@@ -151,14 +142,14 @@
                     type="button"
                     class="site-nav__link site-nav__link--icon js-drawer-open-nav"
                     aria-controls="NavDrawer">
-                    <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-hamburger" viewBox="0 0 64 64"><path d="M7 15h51M7 32h43M7 49h51"/></svg>
+                    <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-hamburger" viewBox="0 0 64 64"><title>icon-hamburger</title><path d="M7 15h51M7 32h43M7 49h51"/></svg>
                     <span class="icon__fallback-text">{{ 'general.drawers.navigation' | t }}</span>
                   </button>
                 </div>
               </div>
 
               {%- if section.settings.main_menu_alignment == 'center-split' -%}
-                {%- render 'header-split-nav', main_menu: main_menu, section: section, dropdown_alignment: dropdown_alignment -%}
+                {%- render 'header-split-nav', main_menu: main_menu, section: section, dropdown_alignment: dropdown_alignment, hover_menu: section.settings.hover_menu -%}
               {%- endif -%}
 
               {%- if section.settings.main_menu_alignment != 'center-split' -%}
@@ -175,52 +166,20 @@
 
           {%- if section.settings.main_menu_alignment == 'center' -%}
             <div class="text-center">
-              {%- render 'header-desktop-nav', main_menu: main_menu, dropdown_alignment: dropdown_alignment -%}
+              {%- render 'header-desktop-nav', main_menu: main_menu, dropdown_alignment: dropdown_alignment, hover_menu: section.settings.hover_menu -%}
             </div>
           {%- endif -%}
         </div>
         <div class="site-header__search-container">
           <div class="site-header__search">
             <div class="page-width">
-              <form action="{{ routes.search_url }}" method="get" role="search"
-                id="HeaderSearchForm"
-                class="site-header__search-form">
-                <input type="hidden" name="type" value="{{ settings.search_type }}">
-                <input type="hidden" name="options[prefix]" value="last">
-                <button type="submit" class="text-link site-header__search-btn site-header__search-btn--submit">
-                  <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-search" viewBox="0 0 64 64"><path d="M47.16 28.58A18.58 18.58 0 1 1 28.58 10a18.58 18.58 0 0 1 18.58 18.58zM54 54L41.94 42"/></svg>
-                  <span class="icon__fallback-text">{{ 'general.search.submit' | t }}</span>
-                </button>
-                <input type="search" name="q" value="{{ search.terms | escape | replace: '*', '' }}" placeholder="{{ 'general.search.placeholder' | t }}" class="site-header__search-input" aria-label="{{ 'general.search.placeholder' | t }}">
-              </form>
-              <button type="button" id="SearchClose" class="js-search-header-close text-link site-header__search-btn">
-                <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-close" viewBox="0 0 64 64"><path d="M19 17.61l27.12 27.13m0-27.12L19 44.74"/></svg>
-                <span class="icon__fallback-text">{{ 'general.accessibility.close_modal' | t | json }}</span>
-              </button>
+              {% render 'predictive-search', context: 'header' %}
             </div>
           </div>
-          {%- if settings.predictive_search_enabled -%}
-            <div id="PredictiveWrapper" class="predictive-results hide" data-image-size="{{ settings.predictive_image_size }}">
-              <div class="page-width">
-                <div id="PredictiveResults" class="predictive-result__layout"></div>
-                <div class="text-center predictive-results__footer">
-                  <button type="button" class="btn btn--small" data-predictive-search-button>
-                    <small>
-                      {{ 'general.search.view_more' | t }}
-                    </small>
-                  </button>
-                </div>
-              </div>
-            </div>
-          {%- endif -%}
         </div>
       </header>
     </div>
   </div>
-
-  {%- unless overlay_header or section.settings.announcement_above_header -%}
-    {%- render 'announcement-bar', section: section -%}
-  {%- endunless -%}
 </div>
 
 {% schema %}
@@ -232,6 +191,12 @@
       "id": "main_menu_link_list",
       "label": "t:sections.header.settings.main_menu_link_list.label",
       "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "hover_menu",
+      "label": "t:sections.header.settings.hover_menu.label",
+      "default": true
     },
     {
       "type": "checkbox",
@@ -304,20 +269,6 @@
       "label": "t:sections.header.settings.sticky_collection.label",
       "info": "t:sections.header.settings.sticky_collection.info",
       "default": false
-    },
-    {
-      "type": "header",
-      "content": "t:sections.header.settings.header_announcement_bar"
-    },
-    {
-      "type": "checkbox",
-      "id": "announcement_compact",
-      "label": "t:sections.header.settings.announcement_compact.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "announcement_above_header",
-      "label": "t:sections.header.settings.announcement_above_header.label"
     },
     {
       "type": "header",
@@ -402,34 +353,13 @@
           "info": "t:sections.header.blocks.logo.settings.mobile_logo_width.info"
         }
       ]
-    },
-    {
-      "type": "announcement",
-      "name": "t:sections.header.blocks.announcement.name",
-      "limit": 3,
-      "settings": [
-        {
-          "type": "text",
-          "id": "text",
-          "label": "t:sections.header.blocks.announcement.settings.text.label",
-          "default": "Hassle-free returns"
-        },
-        {
-          "type": "text",
-          "id": "link_text",
-          "label": "t:sections.header.blocks.announcement.settings.link_text.label",
-          "default": "30-day postage paid returns"
-        },
-        {
-          "type": "url",
-          "id": "link",
-          "label": "t:sections.header.blocks.announcement.settings.link.label"
-        }
-      ]
     }
   ],
   "default": {
     "settings": {}
+  },
+  "disabled_on": {
+    "groups": ["footer", "custom.popups"]
   }
 }
 {% endschema %}
