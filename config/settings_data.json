@@ -98,7 +98,7 @@
         ],
         "settings": {
           "main_menu_link_list": "customer-account-main-menu",
-          "hover_menu": false,
+          "hover_menu": true,
           "mega_menu_images": true,
           "main_menu_alignment": "center",
           "header_style": "sticky",
