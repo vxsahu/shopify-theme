@@ -59,19 +59,13 @@
                     {%- assign animation_column = animation_column | plus: 1 -%}
                   {%- endif -%}
 
-                  {%- assign subcollection_drop = false -%}
                   {%- if childlink.levels > 0 and childlink.url contains '/collections/' -%}
-                    {%- liquid
-                      assign lang_code_string = request.locale.iso_code | prepend: '/' | downcase
-                      assign subcollection_handle = childlink.url | remove: '/collections/' | remove: lang_code_string
-                      assign subcollection_drop = collections[subcollection_handle]
-                    -%}
-                    {%- if subcollection_drop.image != blank -%}
+                    {%- if collections[childlink.object.handle].image != blank -%}
                       <a
                         href="{{ childlink.url }}"
                         class="megamenu__colection-image"
-                        aria-label="{{collections[subcollection_handle].title}}"
-                        style="background-image: url({{ collections[subcollection_handle].image | img_url: '400x' }})"></a>
+                        aria-label="{{collections[childlink.object.handle].title}}"
+                        style="background-image: url({{ collections[childlink.object.handle].image | img_url: '400x' }})"></a>
                     {%- endif -%}
                   {%- endif -%}
 
