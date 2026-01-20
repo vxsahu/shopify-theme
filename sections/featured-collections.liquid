@@ -1,0 +1,178 @@
+{%- if section.settings.divider -%}<div class="section--divider">{%- endif -%}
+
+<div class="page-width">
+  {%- if section.settings.title != blank -%}
+    <div class="section-header">
+      <h2 class="section-header__title">{{ section.settings.title }}</h2>
+    </div>
+  {%- endif -%}
+
+  <div class="grid grid--uniform{% unless section.settings.enable_gutter %} grid--no-gutters{% endunless %}">
+    {%- liquid
+      assign isEmpty = true
+      if section.blocks.size > 0
+        assign isEmpty = false
+      endif
+    -%}
+
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign collection = collections[block.settings.collection]
+        assign background_position = block.settings.focal_point
+
+        case section.settings.per_row
+          when 2
+            assign grid_item_width = 'medium-up--one-half'
+          when 3
+            assign grid_item_width = 'small--one-half medium-up--one-third'
+          when 4
+            assign grid_item_width = 'small--one-half medium-up--one-quarter'
+          when 5
+            assign grid_item_width = 'small--one-half medium-up--one-fifth'
+        endcase
+      -%}
+
+      {%- render 'collection-grid-item',
+        collection: collection,
+        block: block,
+        grid_item_width: grid_item_width,
+        background_position: background_position,
+        per_row: section.settings.per_row
+      -%}
+    {%- endfor -%}
+
+    {%- if isEmpty -%}
+      <div class="page-width">
+        <div class="grid">
+          <div class="grid__item">
+            <div class="rte">
+              {{ 'home_page.onboarding.no_content' | t }}
+            </div>
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>
+
+{%- if section.settings.divider -%}</div>{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.featured-collections.name",
+  "class": "index-section",
+  "max_blocks": 15,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:sections.featured-collections.settings.title.label",
+      "default": "Collection list"
+    },
+    {
+      "type": "checkbox",
+      "id": "divider",
+      "label": "t:sections.featured-collections.settings.divider.label",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "per_row",
+      "label": "t:sections.featured-collections.settings.per_row.label",
+      "default": 4,
+      "min": 2,
+      "max": 5,
+      "step": 1
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_gutter",
+      "label": "t:sections.featured-collections.settings.enable_gutter.label",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.featured-collections.presets.collection_list.name",
+      "blocks": [
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "t:sections.featured-collections.blocks.collection.name",
+      "settings": [
+        {
+          "id": "collection",
+          "type": "collection",
+          "label": "t:sections.featured-collections.blocks.collection.settings.collection.label"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.featured-collections.blocks.collection.settings.title.label"
+        },
+        {
+          "type": "select",
+          "id": "focal_point",
+          "label": "t:sections.featured-collections.blocks.collection.settings.focal_point.label",
+          "info": "t:sections.featured-collections.blocks.collection.settings.focal_point.info",
+          "default": "center center",
+          "options": [
+            {
+              "value": "20% 0",
+              "label": "t:sections.featured-collections.blocks.collection.settings.focal_point.options.20_0.label"
+            },
+            {
+              "value": "top center",
+              "label": "t:sections.featured-collections.blocks.collection.settings.focal_point.options.top_center.label"
+            },
+            {
+              "value": "80% 0",
+              "label": "t:sections.featured-collections.blocks.collection.settings.focal_point.options.80_0.label"
+            },
+            {
+              "value": "20% 50%",
+              "label": "t:sections.featured-collections.blocks.collection.settings.focal_point.options.20_50.label"
+            },
+            {
+              "value": "center center",
+              "label": "t:sections.featured-collections.blocks.collection.settings.focal_point.options.center_center.label"
+            },
+            {
+              "value": "80% 50%",
+              "label": "t:sections.featured-collections.blocks.collection.settings.focal_point.options.80_50.label"
+            },
+            {
+              "value": "20% 100%",
+              "label": "t:sections.featured-collections.blocks.collection.settings.focal_point.options.20_100.label"
+            },
+            {
+              "value": "bottom center",
+              "label": "t:sections.featured-collections.blocks.collection.settings.focal_point.options.bottom_center.label"
+            },
+            {
+              "value": "80% 100%",
+              "label": "t:sections.featured-collections.blocks.collection.settings.focal_point.options.80_100.label"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,290 @@
+<section class="tv-premium-scroll">
+
+  <!-- Overlay Content -->
+  <div class="tv-overlay">
+    <h2>{{ section.settings.heading }}</h2>
+    <p>{{ section.settings.subtext }}</p>
+
+    {% if section.settings.button_text != blank %}
+      <a href="{{ section.settings.button_link }}" class="tv-btn">
+        {{ section.settings.button_text }}
+      </a>
+    {% endif %}
+  </div>
+
+  <!-- Gradient Fade -->
+  <div class="tv-fade-left"></div>
+  <div class="tv-fade-right"></div>
+
+  <!-- Scroll Area -->
+  <div class="tv-scroll-wrapper">
+    <div class="tv-scroll-track">
+
+      {% for block in section.blocks %}
+        <div class="tv-card">
+          <img src="{{ block.settings.image | img_url: '900x' }}">
+        </div>
+      {% endfor %}
+
+      {% for block in section.blocks %}
+        <div class="tv-card">
+          <img src="{{ block.settings.image | img_url: '900x' }}">
+        </div>
+      {% endfor %}
+
+    </div>
+  </div>
+
+</section>
+
+<style>
+
+.tv-premium-scroll {
+  position: relative;
+  padding: 90px 0;
+  background: {{ section.settings.bg_color }};
+  overflow: hidden;
+}
+
+/* TEXT OVERLAY */
+
+.tv-overlay {
+  position: absolute;
+  z-index: 5;
+  width: 100%;
+  text-align: center;
+  top: 15%;
+}
+
+.tv-overlay h2 {
+  font-size: 46px;
+  color: {{ section.settings.text_color }};
+  font-weight: 600;
+}
+
+.tv-overlay p {
+  max-width: 600px;
+  margin: 15px auto;
+  color: {{ section.settings.text_color }};
+  opacity: 0.9;
+}
+
+.tv-btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 14px 34px;
+  background: {{ section.settings.button_bg }};
+  color: {{ section.settings.button_text_color }};
+  border-radius: 40px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* Scroll Area */
+
+.tv-scroll-wrapper {
+  overflow: hidden;
+  width: 100%;
+}
+
+.tv-scroll-track {
+  display: flex;
+  width: max-content;
+  animation: scrollMove linear infinite;
+  animation-duration: {{ section.settings.speed }}s;
+}
+
+.tv-scroll-wrapper:hover .tv-scroll-track {
+  animation-play-state: paused;
+}
+
+/* Cards */
+
+.tv-card {
+  min-width: {{ section.settings.card_width }}px;
+  height: {{ section.settings.card_height }}px;
+  margin-right: 20px;
+  border-radius: {{ section.settings.radius }}px;
+  overflow: hidden;
+  box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+}
+
+.tv-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Gradient Edges */
+
+.tv-fade-left,
+.tv-fade-right {
+  position: absolute;
+  top: 0;
+  width: 120px;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.tv-fade-left {
+  left: 0;
+  background: linear-gradient(to right, {{ section.settings.bg_color }}, transparent);
+}
+
+.tv-fade-right {
+  right: 0;
+  background: linear-gradient(to left, {{ section.settings.bg_color }}, transparent);
+}
+
+/* Animation */
+
+@keyframes scrollMove {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Mobile */
+
+@media(max-width:768px){
+
+.tv-overlay h2 {
+  font-size: 28px;
+}
+
+.tv-card {
+  min-width: 220px;
+  height: 300px;
+}
+
+}
+
+</style>
+
+{% schema %}
+{
+  "name": "Premium Scroll Gallery",
+  "settings": [
+
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading Text",
+      "default": "SHOP CURATED COLLECTIONS"
+    },
+
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Sub Text",
+      "default": "Discover premium art collections designed to inspire your space."
+    },
+
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Explore Now →"
+    },
+
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Scroll Speed (Lower = Faster)",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "default": 35
+    },
+
+    {
+      "type": "range",
+      "id": "card_width",
+      "label": "Image Width",
+      "min": 200,
+      "max": 450,
+      "step": 10,
+      "default": 320
+    },
+
+    {
+      "type": "range",
+      "id": "card_height",
+      "label": "Image Height",
+      "min": 250,
+      "max": 550,
+      "step": 10,
+      "default": 420
+    },
+
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "Corner Roundness",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "default": 22
+    },
+
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#fafafa"
+    },
+
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+
+    {
+      "type": "color",
+      "id": "button_bg",
+      "label": "Button Background",
+      "default": "#c89b3c"
+    },
+
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    }
+
+  ],
+
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Gallery Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Upload Image"
+        }
+      ]
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Premium Scroll Gallery"
+    }
+  ]
+}
+{% endschema %}

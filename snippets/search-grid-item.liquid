@@ -1,0 +1,46 @@
+{% comment %}
+Arguments
+- product: product object
+- [per_row]: number of items per row
+{% endcomment %}
+
+{%- liquid
+  unless per_row
+    assign per_row = 4
+  endunless
+
+  case per_row
+    when 1
+      assign grid_item_width = ''
+    when 2
+      assign grid_item_width = 'medium-up--one-half'
+    when 3
+      assign grid_item_width = 'small--one-half medium-up--one-third'
+    when 4
+      assign grid_item_width = 'small--one-half medium-up--one-quarter'
+    when 5
+      assign grid_item_width = 'small--one-half medium-up--one-fifth'
+    when 6
+      assign grid_item_width = 'small--one-half medium-up--one-sixth'
+  endcase
+-%}
+
+<div class="grid__item grid-search medium-up--one-quarter {{ grid_item_width }}" data-aos="row-of-{{ per_row }}">
+  <div class="grid-search__page">
+    <a href="{{ item.url }}" class="grid-search__page-link">
+      <span class="grid-search__page-content">
+      <span class="h4">{{ item.title }}</span>
+        {%- if item.object_type == 'article' and item.image -%}
+          {%- assign img_url = item.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+          <img class="grid-product__image lazyload"
+            data-src="{{ img_url }}"
+            data-widths="[180, 360, 540]"
+            data-aspectratio="{{ item.image.aspect_ratio }}"
+            data-sizes="auto"
+            alt="{{ item.title | escape }}">
+        {%- endif -%}
+        {{ item.content | strip_html | truncatewords: 45 }}
+      </span>
+    </a>
+  </div>
+</div>

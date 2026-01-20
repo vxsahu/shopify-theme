@@ -1,0 +1,39 @@
+{% comment %}
+  Generate a list of collection tiles if the main menu item is
+  active and its children are also collection links
+{% endcomment %}
+{%- liquid
+  unless current_tags
+    assign current_items = ''
+
+    for link in linklists.main-menu.links
+      if link.active and link.levels > 0 and link.child_active == false
+        unless current_items contains link.title
+          render 'sub-collections', per_row: per_row, sub_collection_links: link.links
+          assign current_items = current_items | append: link.title
+        endunless
+      endif
+      for sub_link in link.links
+        if sub_link.active and sub_link.levels > 0 and sub_link.child_active == false
+          unless current_items contains sub_link.title
+            render 'sub-collections', per_row: per_row, sub_collection_links: sub_link.links
+            assign current_items = current_items | append: sub_link.title
+          endunless
+        endif
+        for sub_sub_link in sub_link.links
+          if sub_sub_link.active and sub_sub_link.url == sub_link.url
+            unless current_items contains sub_sub_link.title
+              render 'sub-collections', per_row: per_row, parent_url: sub_link.url, sub_collection_links: sub_link.links
+              assign current_items = current_items | append: sub_sub_link.title
+            endunless
+          elsif sub_sub_link.active and sub_sub_link.levels > 0
+            unless current_items contains sub_sub_link.title
+              render 'sub-collections', per_row: per_row, sub_collection_links: sub_sub_link.links
+              assign current_items = current_items | append: sub_sub_link.title
+            endunless
+          endif
+        endfor
+      endfor
+    endfor
+  endunless
+-%}

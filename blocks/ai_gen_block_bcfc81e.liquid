@@ -1,0 +1,942 @@
+{% doc %}
+  @prompt
+    Modern luxury interior wall art showcase, cozy aesthetic living room and bedroom setups, framed abstract art posters on walls, warm natural sunlight, beige and earthy color palette, Scandinavian minimal home decor, wooden furniture, soft fabric textures, premium art gallery look, editorial interior photography style, cinematic lighting, soft shadows, depth of field, ultra realistic, 4k resolution, clean composition, rounded corner image card layout, ecommerce website hero banner style, wide horizontal composition, multiple room scenes aligned side by side, seamless gallery layout, smooth visual flow for right to left scrolling carousel, luxury brand website aesthetic
+    
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-art-showcase-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.section_padding }}px 0;
+    overflow: hidden;
+  }
+
+  .ai-art-showcase-container-{{ ai_gen_id }} {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .ai-art-showcase-header-{{ ai_gen_id }} {
+    text-align: {{ block.settings.text_alignment }};
+    margin-bottom: {{ block.settings.header_spacing }}px;
+    padding: 0 {{ block.settings.mobile_padding }}px;
+  }
+
+  .ai-art-showcase-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.title_color }};
+    margin: 0 0 {{ block.settings.subtitle_spacing }}px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+  }
+
+  .ai-art-showcase-subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_size }}px;
+    color: {{ block.settings.subtitle_color }};
+    margin: 0;
+    opacity: 0.85;
+    line-height: 1.6;
+  }
+
+  .ai-art-showcase-carousel-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+  }
+
+  .ai-art-showcase-carousel-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.card_gap }}px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: {{ block.settings.carousel_padding_vertical }}px {{ block.settings.mobile_padding }}px;
+  }
+
+  .ai-art-showcase-carousel-{{ ai_gen_id }}::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ai-art-showcase-card-{{ ai_gen_id }} {
+    flex: 0 0 auto;
+    width: {{ block.settings.card_width }}px;
+    position: relative;
+    border-radius: {{ block.settings.card_border_radius }}px;
+    overflow: hidden;
+    background-color: {{ block.settings.card_background }};
+    box-shadow: {{ block.settings.shadow_horizontal }}px {{ block.settings.shadow_vertical }}px {{ block.settings.shadow_blur }}px rgba(0, 0, 0, {{ block.settings.shadow_opacity }});
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .ai-art-showcase-card-{{ ai_gen_id }}:hover {
+    transform: translateY(-{{ block.settings.hover_lift }}px);
+    box-shadow: {{ block.settings.shadow_horizontal }}px {{ block.settings.shadow_vertical | plus: 4 }}px {{ block.settings.shadow_blur | plus: 8 }}px rgba(0, 0, 0, {{ block.settings.shadow_opacity | times: 1.5 }});
+  }
+
+  .ai-art-showcase-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    aspect-ratio: {{ block.settings.image_aspect_width }} / {{ block.settings.image_aspect_height }};
+    overflow: hidden;
+  }
+
+  .ai-art-showcase-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ai-art-showcase-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, {{ block.settings.placeholder_color_1 }} 0%, {{ block.settings.placeholder_color_2 }} 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-art-showcase-image-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.15;
+  }
+
+  .ai-art-showcase-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, {{ block.settings.overlay_opacity }}) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .ai-art-showcase-card-{{ ai_gen_id }}:hover .ai-art-showcase-overlay-{{ ai_gen_id }} {
+    opacity: 1;
+  }
+
+  .ai-art-showcase-content-{{ ai_gen_id }} {
+    padding: {{ block.settings.card_content_padding }}px;
+  }
+
+  .ai-art-showcase-card-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.card_title_size }}px;
+    color: {{ block.settings.card_title_color }};
+    margin: 0 0 {{ block.settings.card_text_spacing }}px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+
+  .ai-art-showcase-card-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.card_description_size }}px;
+    color: {{ block.settings.card_description_color }};
+    margin: 0;
+    line-height: 1.5;
+    opacity: 0.8;
+  }
+
+  .ai-art-showcase-nav-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: {{ block.settings.nav_spacing }}px;
+    padding: 0 {{ block.settings.mobile_padding }}px;
+  }
+
+  .ai-art-showcase-nav-button-{{ ai_gen_id }} {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: {{ block.settings.nav_button_color }};
+    border: 1px solid {{ block.settings.nav_button_border }};
+    color: {{ block.settings.nav_button_icon_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .ai-art-showcase-nav-button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.nav_button_hover_color }};
+    transform: scale(1.05);
+  }
+
+  .ai-art-showcase-nav-button-{{ ai_gen_id }}:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .ai-art-showcase-nav-button-{{ ai_gen_id }}:disabled:hover {
+    transform: none;
+  }
+
+  .ai-art-showcase-dots-{{ ai_gen_id }} {
+    display: flex;
+    gap: 8px;
+  }
+
+  .ai-art-showcase-dot-{{ ai_gen_id }} {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: {{ block.settings.dot_color }};
+    opacity: 0.3;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .ai-art-showcase-dot-{{ ai_gen_id }}.active {
+    opacity: 1;
+    width: 24px;
+    border-radius: 4px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-art-showcase-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.7 }}px;
+    }
+
+    .ai-art-showcase-subtitle-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subtitle_size | times: 0.85 }}px;
+    }
+
+    .ai-art-showcase-card-{{ ai_gen_id }} {
+      width: {{ block.settings.card_width_mobile }}px;
+    }
+
+    .ai-art-showcase-card-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.card_title_size | times: 0.9 }}px;
+    }
+
+    .ai-art-showcase-card-description-{{ ai_gen_id }} {
+      font-size: {{ block.settings.card_description_size | times: 0.9 }}px;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-art-showcase-header-{{ ai_gen_id }},
+    .ai-art-showcase-nav-{{ ai_gen_id }} {
+      padding: 0 {{ block.settings.desktop_padding }}px;
+    }
+
+    .ai-art-showcase-carousel-{{ ai_gen_id }} {
+      padding: {{ block.settings.carousel_padding_vertical }}px {{ block.settings.desktop_padding }}px;
+    }
+  }
+{% endstyle %}
+
+<art-showcase-{{ ai_gen_id }} class="ai-art-showcase-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-art-showcase-container-{{ ai_gen_id }}">
+    {% if block.settings.title != blank or block.settings.subtitle != blank %}
+      <div class="ai-art-showcase-header-{{ ai_gen_id }}">
+        {% if block.settings.title != blank %}
+          <h2 class="ai-art-showcase-title-{{ ai_gen_id }}">{{ block.settings.title }}</h2>
+        {% endif %}
+        {% if block.settings.subtitle != blank %}
+          <div class="ai-art-showcase-subtitle-{{ ai_gen_id }}">{{ block.settings.subtitle }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="ai-art-showcase-carousel-wrapper-{{ ai_gen_id }}">
+      <div class="ai-art-showcase-carousel-{{ ai_gen_id }}" data-carousel>
+        {% for i in (1..6) %}
+          {% liquid
+            assign image_key = 'image_' | append: i
+            assign title_key = 'card_title_' | append: i
+            assign description_key = 'card_description_' | append: i
+            assign image = block.settings[image_key]
+            assign title = block.settings[title_key]
+            assign description = block.settings[description_key]
+          %}
+
+          <div class="ai-art-showcase-card-{{ ai_gen_id }}">
+            <div class="ai-art-showcase-image-wrapper-{{ ai_gen_id }}">
+              {% if image %}
+                <img
+                  src="{{ image | image_url: width: 1200 }}"
+                  alt="{{ image.alt | escape }}"
+                  loading="lazy"
+                  width="{{ image.width }}"
+                  height="{{ image.height }}"
+                  class="ai-art-showcase-image-{{ ai_gen_id }}"
+                >
+              {% else %}
+                <div class="ai-art-showcase-image-placeholder-{{ ai_gen_id }}">
+                  {{ 'hero-apparel-1' | placeholder_svg_tag }}
+                </div>
+              {% endif %}
+              {% if block.settings.show_overlay %}
+                <div class="ai-art-showcase-overlay-{{ ai_gen_id }}"></div>
+              {% endif %}
+            </div>
+            {% if title != blank or description != blank %}
+              <div class="ai-art-showcase-content-{{ ai_gen_id }}">
+                {% if title != blank %}
+                  <h3 class="ai-art-showcase-card-title-{{ ai_gen_id }}">{{ title }}</h3>
+                {% endif %}
+                {% if description != blank %}
+                  <div class="ai-art-showcase-card-description-{{ ai_gen_id }}">{{ description }}</div>
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if block.settings.show_navigation %}
+      <div class="ai-art-showcase-nav-{{ ai_gen_id }}">
+        <button
+          class="ai-art-showcase-nav-button-{{ ai_gen_id }}"
+          data-prev
+          aria-label="Previous"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <div class="ai-art-showcase-dots-{{ ai_gen_id }}" data-dots></div>
+        <button
+          class="ai-art-showcase-nav-button-{{ ai_gen_id }}"
+          data-next
+          aria-label="Next"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+    {% endif %}
+  </div>
+</art-showcase-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ArtShowcase{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.carousel = this.querySelector('[data-carousel]');
+        this.prevButton = this.querySelector('[data-prev]');
+        this.nextButton = this.querySelector('[data-next]');
+        this.dotsContainer = this.querySelector('[data-dots]');
+        this.cards = this.querySelectorAll('.ai-art-showcase-card-{{ ai_gen_id }}');
+        this.currentIndex = 0;
+      }
+
+      connectedCallback() {
+        if (!this.carousel) return;
+
+        this.setupDots();
+        this.setupNavigation();
+        this.updateNavigation();
+
+        this.carousel.addEventListener('scroll', () => {
+          this.handleScroll();
+        });
+      }
+
+      setupDots() {
+        if (!this.dotsContainer) return;
+
+        this.dotsContainer.innerHTML = '';
+        this.cards.forEach((card, index) => {
+          const dot = document.createElement('div');
+          dot.className = 'ai-art-showcase-dot-{{ ai_gen_id }}';
+          if (index === 0) dot.classList.add('active');
+          dot.addEventListener('click', () => this.scrollToCard(index));
+          this.dotsContainer.appendChild(dot);
+        });
+      }
+
+      setupNavigation() {
+        if (this.prevButton) {
+          this.prevButton.addEventListener('click', () => this.scrollPrev());
+        }
+        if (this.nextButton) {
+          this.nextButton.addEventListener('click', () => this.scrollNext());
+        }
+      }
+
+      scrollPrev() {
+        const cardWidth = this.cards[0].offsetWidth;
+        const gap = {{ block.settings.card_gap }};
+        this.carousel.scrollBy({
+          left: -(cardWidth + gap),
+          behavior: 'smooth'
+        });
+      }
+
+      scrollNext() {
+        const cardWidth = this.cards[0].offsetWidth;
+        const gap = {{ block.settings.card_gap }};
+        this.carousel.scrollBy({
+          left: cardWidth + gap,
+          behavior: 'smooth'
+        });
+      }
+
+      scrollToCard(index) {
+        const cardWidth = this.cards[0].offsetWidth;
+        const gap = {{ block.settings.card_gap }};
+        this.carousel.scrollTo({
+          left: index * (cardWidth + gap),
+          behavior: 'smooth'
+        });
+      }
+
+      handleScroll() {
+        const scrollLeft = this.carousel.scrollLeft;
+        const cardWidth = this.cards[0].offsetWidth;
+        const gap = {{ block.settings.card_gap }};
+        const newIndex = Math.round(scrollLeft / (cardWidth + gap));
+
+        if (newIndex !== this.currentIndex) {
+          this.currentIndex = newIndex;
+          this.updateDots();
+          this.updateNavigation();
+        }
+      }
+
+      updateDots() {
+        if (!this.dotsContainer) return;
+
+        const dots = this.dotsContainer.querySelectorAll('.ai-art-showcase-dot-{{ ai_gen_id }}');
+        dots.forEach((dot, index) => {
+          if (index === this.currentIndex) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+      }
+
+      updateNavigation() {
+        if (!this.prevButton || !this.nextButton) return;
+
+        const maxScroll = this.carousel.scrollWidth - this.carousel.clientWidth;
+        const scrollLeft = this.carousel.scrollLeft;
+
+        this.prevButton.disabled = scrollLeft <= 0;
+        this.nextButton.disabled = scrollLeft >= maxScroll - 1;
+      }
+    }
+
+    customElements.define('art-showcase-{{ ai_gen_id }}', ArtShowcase{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Luxury art showcase",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section header"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "Title",
+      "default": "Featured Interior Collections"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Discover our curated selection of premium wall art for modern living spaces"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "label": "Subtitle size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#1c1d1d"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle color",
+      "default": "#666666"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "label": "Header spacing",
+      "min": 20,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "subtitle_spacing",
+      "label": "Subtitle spacing",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Card images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Image 1"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "card_title_1",
+      "label": "Card 1 title",
+      "default": "Living Room Elegance"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "card_description_1",
+      "label": "Card 1 description",
+      "default": "Warm beige tones with abstract art"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Image 2"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "card_title_2",
+      "label": "Card 2 title",
+      "default": "Bedroom Serenity"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "card_description_2",
+      "label": "Card 2 description",
+      "default": "Minimal Scandinavian aesthetic"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "Image 3"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "card_title_3",
+      "label": "Card 3 title",
+      "default": "Gallery Wall"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "card_description_3",
+      "label": "Card 3 description",
+      "default": "Curated art collection display"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_4",
+      "label": "Image 4"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "card_title_4",
+      "label": "Card 4 title",
+      "default": "Modern Minimalism"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "card_description_4",
+      "label": "Card 4 description",
+      "default": "Clean lines and natural light"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_5",
+      "label": "Image 5"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "card_title_5",
+      "label": "Card 5 title",
+      "default": "Earthy Tones"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "card_description_5",
+      "label": "Card 5 description",
+      "default": "Organic textures and warmth"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_6",
+      "label": "Image 6"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "card_title_6",
+      "label": "Card 6 title",
+      "default": "Cozy Corner"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "card_description_6",
+      "label": "Card 6 description",
+      "default": "Soft fabrics and wooden accents"
+    },
+    {
+      "type": "header",
+      "content": "Card style"
+    },
+    {
+      "type": "range",
+      "id": "card_width",
+      "label": "Card width (desktop)",
+      "min": 300,
+      "max": 600,
+      "step": 20,
+      "unit": "px",
+      "default": 420
+    },
+    {
+      "type": "range",
+      "id": "card_width_mobile",
+      "label": "Card width (mobile)",
+      "min": 240,
+      "max": 360,
+      "step": 20,
+      "unit": "px",
+      "default": 280
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Gap between cards",
+      "min": 12,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "image_aspect_width",
+      "label": "Image aspect ratio width",
+      "min": 1,
+      "max": 21,
+      "step": 1,
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "image_aspect_height",
+      "label": "Image aspect ratio height",
+      "min": 1,
+      "max": 21,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "type": "checkbox",
+      "id": "show_overlay",
+      "label": "Show hover overlay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 0.8,
+      "step": 0.1,
+      "default": 0.4
+    },
+    {
+      "type": "range",
+      "id": "hover_lift",
+      "label": "Hover lift effect",
+      "min": 0,
+      "max": 16,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Card content"
+    },
+    {
+      "type": "range",
+      "id": "card_content_padding",
+      "label": "Content padding",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "card_title_size",
+      "label": "Title size",
+      "min": 14,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "card_description_size",
+      "label": "Description size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "card_title_color",
+      "label": "Title color",
+      "default": "#1c1d1d"
+    },
+    {
+      "type": "color",
+      "id": "card_description_color",
+      "label": "Description color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "card_text_spacing",
+      "label": "Text spacing",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Shadow"
+    },
+    {
+      "type": "range",
+      "id": "shadow_horizontal",
+      "label": "Horizontal offset",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "shadow_vertical",
+      "label": "Vertical offset",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "shadow_blur",
+      "label": "Blur radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "shadow_opacity",
+      "label": "Shadow opacity",
+      "min": 0,
+      "max": 0.5,
+      "step": 0.1,
+      "default": 0.1
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "label": "Show navigation",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "nav_spacing",
+      "label": "Navigation spacing",
+      "min": 20,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "color",
+      "id": "nav_button_color",
+      "label": "Button background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "nav_button_hover_color",
+      "label": "Button hover background",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "nav_button_border",
+      "label": "Button border",
+      "default": "#e8e8e1"
+    },
+    {
+      "type": "color",
+      "id": "nav_button_icon_color",
+      "label": "Button icon color",
+      "default": "#1c1d1d"
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Dot color",
+      "default": "#1c1d1d"
+    },
+    {
+      "type": "header",
+      "content": "Placeholder"
+    },
+    {
+      "type": "color",
+      "id": "placeholder_color_1",
+      "label": "Gradient start",
+      "default": "#f5f5f0"
+    },
+    {
+      "type": "color",
+      "id": "placeholder_color_2",
+      "label": "Gradient end",
+      "default": "#e8e8e1"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#fafaf8"
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Section padding",
+      "min": 20,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "carousel_padding_vertical",
+      "label": "Carousel vertical padding",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding",
+      "label": "Mobile horizontal padding",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding",
+      "label": "Desktop horizontal padding",
+      "min": 20,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Luxury art showcase"
+    }
+  ]
+}
+{% endschema %}

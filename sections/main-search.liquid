@@ -1,0 +1,150 @@
+<div class="search-content" data-section-id="{{ section.id }}" data-section-type="collection-grid">
+  <div class="page-width page-content">
+    {%- render 'breadcrumbs' -%}
+
+    <header class="section-header">
+      <h1 class="section-header__title">
+        {{ 'general.search.title' | t }}
+      </h1>
+    </header>
+
+    {%- render 'search-bar', search_btn_style: 'btn', search_bar_location: 'search-bar--page' -%}
+
+    {%- if search.performed -%}
+      <hr class="hr--medium">
+
+      <div class="section-header">
+        {%- if search.results_count == 0 -%}
+          <p>
+            {{ 'general.search.no_results_html' | t: terms: search.terms | replace: '*', '' }}
+          </p>
+        {%- endif -%}
+      </div>
+
+      {%- if search.results_count != 0 -%}
+
+        {%- assign paginate_by = section.settings.per_row | times: section.settings.rows_per_page -%}
+        {%- paginate search.results by paginate_by -%}
+
+        <div id="CollectionAjaxContent" class="grid grid--uniform" data-scroll-to>
+
+          <div class="grid__item medium-up--one-fifth grid__item--sidebar">
+            {%- render 'collection-grid-filters',
+              collection: search,
+              enable_sidebar: section.settings.enable_sidebar,
+              filter_style: section.settings.filter_style,
+              collapsed: section.settings.collapsed,
+              enable_color_swatches: section.settings.enable_color_swatches
+            -%}
+          </div>
+
+          <div class="grid__item medium-up--four-fifths grid__item--content">
+            {% render 'collection-grid',
+              collection: search,
+              items: search.results,
+              enable_sidebar: section.settings.enable_sidebar,
+              filter_style: section.settings.filter_style,
+              enable_sort: true,
+              enable_collection_count: true,
+              per_row: section.settings.per_row,
+              mobile_flush_grid: section.settings.mobile_flush_grid
+              quick_shop_enable: settings.quick_shop_enable
+            %}
+
+            {%- if paginate.pages > 1 -%}
+              {%- render 'pagination', paginate: paginate -%}
+            {%- endif -%}
+          </div>
+        </div>
+
+        {%- endpaginate -%}
+
+      {% endif %}
+
+    {%- endif -%}
+  </div>
+</div>
+
+{%- if section.settings.enable_sidebar == false or section.settings.filter_style == 'drawer' -%}
+{% comment %}
+  Override grid styles if sidebar is disabled
+{% endcomment %}
+<style>
+  .search-content .grid__item--sidebar { width: 0; }
+  .search-content .grid__item--content { width: 100%; }
+  .grid__item--sidebar { position: static; overflow: hidden; }
+</style>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.main-search.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.main-search.settings.header_filtering_and_sorting"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sidebar",
+      "label": "t:sections.main-search.settings.enable_sidebar.label",
+      "default": true,
+      "info": "t:sections.main-search.settings.enable_sidebar.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "collapsed",
+      "label": "t:sections.main-search.settings.collapsed.label",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "filter_style",
+      "label": "t:sections.main-search.settings.filter_style.label",
+      "default": "sidebar",
+      "options": [
+        {
+          "value": "sidebar",
+          "label": "t:sections.main-search.settings.filter_style.options.sidebar.label"
+        },
+        {
+          "value": "drawer",
+          "label": "t:sections.main-search.settings.filter_style.options.drawer.label"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_color_swatches",
+      "label": "t:sections.main-search.settings.enable_color_swatches.label",
+      "info": "t:sections.main-search.settings.enable_color_swatches.info"
+    },
+    {
+      "type": "range",
+      "id": "per_row",
+      "label": "t:sections.main-search.settings.per_row.label",
+      "default": 4,
+      "min": 2,
+      "max": 5,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "rows_per_page",
+      "label": "t:sections.main-search.settings.rows_per_page.label",
+      "default": 7,
+      "min": 3,
+      "max": 20,
+      "step": 1
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_flush_grid",
+      "label": "t:sections.main-search.settings.mobile_flush_grid.label",
+      "default": false
+    }
+  ]
+}
+{% endschema %}
+
+

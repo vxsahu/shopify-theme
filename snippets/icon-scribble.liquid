@@ -1,0 +1,27 @@
+{%- capture class -%}icon icon-{{ icon | handle }}{% if class != blank %} {{ class }}{% endif %}{%- endcapture -%}
+{%- case icon -%}
+  {%- when 'circle' -%}
+    <svg class="{{ class }}" viewBox="0 0 800 350" stroke="currentColor" fill="none" role="presentation" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path transform="matrix(0.9791300296783447,0,0,0.9791300296783447,400,179)" stroke-linejoin="miter" stroke-miterlimit="4" stroke-width="20" pathLength="1" d=" M253,-161 C253,-161 -284.78900146484375,-201.4600067138672 -376,-21 C-469,163 67.62300109863281,174.2100067138672 256,121 C564,34 250.82899475097656,-141.6929931640625 19.10700035095215,-116.93599700927734"/>
+    </svg>
+
+  {%- when 'basic-underline' -%}
+    <svg class="{{ class }}" viewBox="-400 -55 730 60" stroke="currentColor" fill="none" role="presentation" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-width="30" pathLength="1" d="m -383.25 -6 c 55.25 -22 130.75 -33.5 293.25 -38 c 54.5 -0.5 195 -2.5 401 15"/>
+    </svg>
+
+  {%- when 'sketch-underline' -%}
+    <svg class="{{ class }}" viewBox="-158.17 -22.0172 289.2 53.8" stroke="currentColor" fill="none" role="presentation" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-width="8" pathLength="1" d="M -153.17 20.736 C -153.17 20.736 -135 -1 -118 -1 C -99 -1 -136.093 33.632 -117 26 C -105 18 -80 5 -74 1 C -51 -10 -63 9 -58.375 20.387 C -54.89 29.449 -26 3 -9 -1 C 14 -8 -17.599 24.918 1.917 22.827 C 21.434 20.735 37 3 49 0 C 62 -3 55.24 32.585 75 23 C 95 12 95 -1 114 -2"/>
+    </svg>
+
+  {%- when 'squiggle-underline' -%}
+    <svg class="{{ class }}" viewBox="-347 -30.1947 694 96.19" stroke="currentColor" fill="none" role="presentation" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-width="20" pathLength="1" d="M-335,54 C-335,54 -171,-58 -194,-3 C-217,52 -224.1199951171875,73.552001953125 -127,11 C-68,-27 -137,50 -33,42 C31.43899917602539,37.042999267578125 147.14700317382812,-29.308000564575195 335,2"/>
+    </svg>
+
+  {%- when 'squiggle-underline-2' -%}
+    <svg class="{{ class }}" viewBox="-320 -70.8161 640.4 59.82" stroke="currentColor" fill="none" role="presentation" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-width="5" pathLength="1" d="M-300,-56 C-50,-72 298,-65 300,-59 C332,-53 -239,-36 -255,-27 C-271,-18 -88,-24 91,-20"/>
+    </svg>
+{%- endcase -%}

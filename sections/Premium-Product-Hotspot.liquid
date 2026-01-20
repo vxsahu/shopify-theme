@@ -1,0 +1,239 @@
+<section class="premium-hotspot">
+  <div class="page-width">
+
+    {% if section.settings.heading != blank %}
+      <h2 class="premium-heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    <div class="premium-hotspot-wrapper">
+
+      {% if section.settings.image %}
+        <img src="{{ section.settings.image | img_url: '1600x' }}" class="premium-bg">
+      {% endif %}
+
+      {% for block in section.blocks %}
+        {% assign product = block.settings.product %}
+        {% if product != blank %}
+
+          <div class="premium-dot-wrap"
+               style="top:{{ block.settings.y_position }}%; left:{{ block.settings.x_position }}%;">
+
+            <div class="pulse-dot"></div>
+
+            <div class="premium-popup">
+
+              <img src="{{ product.featured_image | img_url: '300x' }}">
+
+              <div class="popup-content">
+                <p>{{ product.title }}</p>
+                <strong>{{ product.price | money }}</strong>
+
+                <a href="{{ product.url }}" class="popup-btn">
+                  View Product
+                </a>
+              </div>
+
+            </div>
+
+          </div>
+
+        {% endif %}
+      {% endfor %}
+
+    </div>
+
+  </div>
+</section>
+
+<style>
+.premium-hotspot {
+  padding: 80px 0;
+  background: #f9f9f9;
+}
+
+.premium-heading {
+  text-align: center;
+  font-size: 34px;
+  margin-bottom: 40px;
+  font-weight: 600;
+}
+
+.premium-hotspot-wrapper {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.premium-bg {
+  width: 100%;
+  display: block;
+}
+
+/* DOT */
+
+.premium-dot-wrap {
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.pulse-dot {
+  width: 18px;
+  height: 18px;
+  background: #000;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+}
+
+/* Pulse Animation */
+
+.pulse-dot::after {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  border: 2px solid rgba(0,0,0,0.4);
+  animation: pulse 1.8s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+/* Popup Card */
+
+.premium-popup {
+  position: absolute;
+  top: 28px;
+  left: 0;
+  width: 230px;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(12px);
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: all 0.3s ease;
+  z-index: 9;
+}
+
+/* Show On Hover */
+
+.premium-dot-wrap:hover .premium-popup {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Popup Content */
+
+.premium-popup img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.popup-content p {
+  font-size: 14px;
+  margin: 8px 0 4px;
+  font-weight: 500;
+}
+
+.popup-content strong {
+  font-size: 15px;
+}
+
+.popup-btn {
+  display: block;
+  margin-top: 8px;
+  text-align: center;
+  background: #000;
+  color: #fff;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 13px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.popup-btn:hover {
+  background: #333;
+}
+
+/* Mobile */
+
+@media(max-width:768px) {
+  .premium-popup {
+    width: 190px;
+  }
+
+  .premium-heading {
+    font-size: 26px;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Premium Product Hotspots",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shop The Look"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Main Image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "hotspot",
+      "name": "Hotspot",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Select Product"
+        },
+        {
+          "type": "range",
+          "id": "x_position",
+          "label": "Horizontal Position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "y_position",
+          "label": "Vertical Position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 50
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Premium Product Hotspots"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,864 @@
+{% doc %}
+  @prompt
+    FAQ Corner
+    FAQ Corner
+    Frequently Asked Questions
+    1. How can I place an order?
+    Simply browse our collection, add your favorite artwork to the cart, and complete checkout securely.
+    
+    2. How long does delivery take?
+    Orders are usually processed within 1–2 business days and delivered within 5–8 business days depending on your location.
+    
+    3. Is Cash on Delivery available?
+    Availability of COD depends on your location and order value.
+    
+    4. Can I track my order?
+    Yes, once your order is shipped, tracking details will be shared via email or SMS.
+    
+    5. Are the artworks exactly the same as shown?
+    Yes, we ensure accurate product representation. Slight color variations may occur due to screen settings.
+    
+    6. How can I contact support?
+    You can reach us anytime via our Contact Us page or email.
+    
+    Still have questions? We’re happy to help!
+    — Team TypewritersVoice i want premium faq section
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-faq-section-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: {{ block.settings.section_padding_top }}px 20px {{ block.settings.section_padding_bottom }}px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-faq-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-faq-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: {{ block.settings.header_spacing }}px;
+  }
+
+  .ai-faq-subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_size }}px;
+    color: {{ block.settings.subtitle_color }};
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .ai-faq-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.title_color }};
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .ai-faq-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.description_size }}px;
+    color: {{ block.settings.description_color }};
+    margin-top: 16px;
+    line-height: 1.6;
+  }
+
+  .ai-faq-list-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.item_spacing }}px;
+  }
+
+  .ai-faq-item-{{ ai_gen_id }} {
+    border: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    overflow: hidden;
+    background-color: {{ block.settings.item_background }};
+    transition: all 0.3s ease;
+  }
+
+  .ai-faq-item-{{ ai_gen_id }}:hover {
+    border-color: {{ block.settings.border_hover_color }};
+    box-shadow: {{ block.settings.shadow_hover }};
+  }
+
+  .ai-faq-question-{{ ai_gen_id }} {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: {{ block.settings.question_padding }}px;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: {{ block.settings.question_size }}px;
+    color: {{ block.settings.question_color }};
+    font-weight: 600;
+    line-height: 1.4;
+    transition: color 0.3s ease;
+  }
+
+  .ai-faq-question-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.question_hover_color }};
+  }
+
+  .ai-faq-icon-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    margin-left: 20px;
+    position: relative;
+    transition: transform 0.3s ease;
+  }
+
+  .ai-faq-icon-{{ ai_gen_id }}::before,
+  .ai-faq-icon-{{ ai_gen_id }}::after {
+    content: '';
+    position: absolute;
+    background-color: {{ block.settings.icon_color }};
+    transition: all 0.3s ease;
+  }
+
+  .ai-faq-icon-{{ ai_gen_id }}::before {
+    width: 100%;
+    height: 2px;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+  }
+
+  .ai-faq-icon-{{ ai_gen_id }}::after {
+    width: 2px;
+    height: 100%;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+  }
+
+  .ai-faq-item-{{ ai_gen_id }}.active .ai-faq-icon-{{ ai_gen_id }}::after {
+    transform: translateX(-50%) rotate(90deg);
+    opacity: 0;
+  }
+
+  .ai-faq-answer-{{ ai_gen_id }} {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+  }
+
+  .ai-faq-item-{{ ai_gen_id }}.active .ai-faq-answer-{{ ai_gen_id }} {
+    max-height: 1000px;
+  }
+
+  .ai-faq-answer-content-{{ ai_gen_id }} {
+    padding: 0 {{ block.settings.question_padding }}px {{ block.settings.question_padding }}px;
+    font-size: {{ block.settings.answer_size }}px;
+    color: {{ block.settings.answer_color }};
+    line-height: 1.7;
+  }
+
+  .ai-faq-footer-{{ ai_gen_id }} {
+    text-align: center;
+    margin-top: {{ block.settings.footer_spacing }}px;
+    padding: {{ block.settings.footer_padding }}px;
+    background-color: {{ block.settings.footer_background }};
+    border-radius: {{ block.settings.border_radius }}px;
+  }
+
+  .ai-faq-footer-text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.footer_text_size }}px;
+    color: {{ block.settings.footer_text_color }};
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+
+  .ai-faq-footer-button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 14px 32px;
+    background-color: {{ block.settings.button_background }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_text_size }}px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid {{ block.settings.button_background }};
+  }
+
+  .ai-faq-footer-button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_background }};
+    color: {{ block.settings.button_hover_text_color }};
+    border-color: {{ block.settings.button_hover_background }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-faq-section-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding_top | times: 0.6 }}px 16px {{ block.settings.section_padding_bottom | times: 0.6 }}px;
+    }
+
+    .ai-faq-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.7 }}px;
+    }
+
+    .ai-faq-subtitle-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subtitle_size | times: 0.85 }}px;
+    }
+
+    .ai-faq-question-{{ ai_gen_id }} {
+      font-size: {{ block.settings.question_size | times: 0.9 }}px;
+      padding: {{ block.settings.question_padding | times: 0.75 }}px;
+    }
+
+    .ai-faq-answer-content-{{ ai_gen_id }} {
+      padding: 0 {{ block.settings.question_padding | times: 0.75 }}px {{ block.settings.question_padding | times: 0.75 }}px;
+    }
+  }
+{% endstyle %}
+
+<faq-section-{{ ai_gen_id }} class="ai-faq-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-faq-container-{{ ai_gen_id }}">
+    {% if block.settings.show_header %}
+      <div class="ai-faq-header-{{ ai_gen_id }}">
+        {% if block.settings.subtitle != blank %}
+          <div class="ai-faq-subtitle-{{ ai_gen_id }}">{{ block.settings.subtitle }}</div>
+        {% endif %}
+        {% if block.settings.title != blank %}
+          <h2 class="ai-faq-title-{{ ai_gen_id }}">{{ block.settings.title }}</h2>
+        {% endif %}
+        {% if block.settings.description != blank %}
+          <div class="ai-faq-description-{{ ai_gen_id }}">{{ block.settings.description }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="ai-faq-list-{{ ai_gen_id }}">
+      {% for i in (1..10) %}
+        {% assign question_key = 'question_' | append: i %}
+        {% assign answer_key = 'answer_' | append: i %}
+        {% assign question = block.settings[question_key] %}
+        {% assign answer = block.settings[answer_key] %}
+
+        {% if question != blank and answer != blank %}
+          <div class="ai-faq-item-{{ ai_gen_id }}" data-faq-item>
+            <button
+              class="ai-faq-question-{{ ai_gen_id }}"
+              aria-expanded="false"
+              data-faq-button
+            >
+              <span>{{ question }}</span>
+              <span class="ai-faq-icon-{{ ai_gen_id }}" aria-hidden="true"></span>
+            </button>
+            <div class="ai-faq-answer-{{ ai_gen_id }}" data-faq-answer>
+              <div class="ai-faq-answer-content-{{ ai_gen_id }}">{{ answer }}</div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% if block.settings.show_footer %}
+      <div class="ai-faq-footer-{{ ai_gen_id }}">
+        {% if block.settings.footer_text != blank %}
+          <div class="ai-faq-footer-text-{{ ai_gen_id }}">{{ block.settings.footer_text }}</div>
+        {% endif %}
+        {% if block.settings.button_text != blank and block.settings.button_link != blank %}
+          <a href="{{ block.settings.button_link }}" class="ai-faq-footer-button-{{ ai_gen_id }}">
+            {{ block.settings.button_text }}
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</faq-section-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class FaqSection{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.items = this.querySelectorAll('[data-faq-item]');
+        this.setupEventListeners();
+        
+        {% if block.settings.open_first %}
+          if (this.items.length > 0) {
+            this.toggleItem(this.items[0]);
+          }
+        {% endif %}
+      }
+
+      setupEventListeners() {
+        this.items.forEach((item) => {
+          const button = item.querySelector('[data-faq-button]');
+          button.addEventListener('click', () => {
+            {% if block.settings.accordion_mode %}
+              this.items.forEach((otherItem) => {
+                if (otherItem !== item && otherItem.classList.contains('active')) {
+                  this.toggleItem(otherItem);
+                }
+              });
+            {% endif %}
+            this.toggleItem(item);
+          });
+        });
+      }
+
+      toggleItem(item) {
+        const button = item.querySelector('[data-faq-button]');
+        const answer = item.querySelector('[data-faq-answer]');
+        const isActive = item.classList.contains('active');
+
+        item.classList.toggle('active');
+        button.setAttribute('aria-expanded', !isActive);
+
+        if (!isActive) {
+          answer.style.maxHeight = answer.scrollHeight + 'px';
+        } else {
+          answer.style.maxHeight = '0';
+        }
+      }
+    }
+
+    customElements.define('faq-section-{{ ai_gen_id }}', FaqSection{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Premium FAQ",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_header",
+      "label": "Show header",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "FAQ Corner"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "header",
+      "content": "Questions & answers"
+    },
+    {
+      "type": "text",
+      "id": "question_1",
+      "label": "Question 1",
+      "default": "How can I place an order?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_1",
+      "label": "Answer 1",
+      "default": "Simply browse our collection, add your favorite artwork to the cart, and complete checkout securely."
+    },
+    {
+      "type": "text",
+      "id": "question_2",
+      "label": "Question 2",
+      "default": "How long does delivery take?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_2",
+      "label": "Answer 2",
+      "default": "Orders are usually processed within 1–2 business days and delivered within 5–8 business days depending on your location."
+    },
+    {
+      "type": "text",
+      "id": "question_3",
+      "label": "Question 3",
+      "default": "Is Cash on Delivery available?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_3",
+      "label": "Answer 3",
+      "default": "Availability of COD depends on your location and order value."
+    },
+    {
+      "type": "text",
+      "id": "question_4",
+      "label": "Question 4",
+      "default": "Can I track my order?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_4",
+      "label": "Answer 4",
+      "default": "Yes, once your order is shipped, tracking details will be shared via email or SMS."
+    },
+    {
+      "type": "text",
+      "id": "question_5",
+      "label": "Question 5",
+      "default": "Are the artworks exactly the same as shown?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_5",
+      "label": "Answer 5",
+      "default": "Yes, we ensure accurate product representation. Slight color variations may occur due to screen settings."
+    },
+    {
+      "type": "text",
+      "id": "question_6",
+      "label": "Question 6",
+      "default": "How can I contact support?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_6",
+      "label": "Answer 6",
+      "default": "You can reach us anytime via our Contact Us page or email."
+    },
+    {
+      "type": "text",
+      "id": "question_7",
+      "label": "Question 7"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_7",
+      "label": "Answer 7"
+    },
+    {
+      "type": "text",
+      "id": "question_8",
+      "label": "Question 8"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_8",
+      "label": "Answer 8"
+    },
+    {
+      "type": "text",
+      "id": "question_9",
+      "label": "Question 9"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_9",
+      "label": "Answer 9"
+    },
+    {
+      "type": "text",
+      "id": "question_10",
+      "label": "Question 10"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_10",
+      "label": "Answer 10"
+    },
+    {
+      "type": "header",
+      "content": "Footer section"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_footer",
+      "label": "Show footer",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "footer_text",
+      "label": "Footer text",
+      "default": "Still have questions? We're happy to help!"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Contact Us"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Behavior"
+    },
+    {
+      "type": "checkbox",
+      "id": "accordion_mode",
+      "label": "Accordion mode",
+      "info": "Only one question open at a time",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "open_first",
+      "label": "Open first question by default",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maximum width",
+      "min": 600,
+      "max": 1400,
+      "step": 100,
+      "unit": "px",
+      "default": 900
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "label": "Header spacing",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "item_spacing",
+      "label": "Item spacing",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "footer_spacing",
+      "label": "Footer spacing",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "item_background",
+      "label": "Item background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border",
+      "default": "#e8e8e1"
+    },
+    {
+      "type": "color",
+      "id": "border_hover_color",
+      "label": "Border hover",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "question_color",
+      "label": "Question",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "question_hover_color",
+      "label": "Question hover",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "answer_color",
+      "label": "Answer",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "footer_background",
+      "label": "Footer background",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "footer_text_color",
+      "label": "Footer text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Button hover background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Button hover text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "label": "Subtitle size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description size",
+      "min": 14,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "question_size",
+      "label": "Question size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "answer_size",
+      "label": "Answer size",
+      "min": 14,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "footer_text_size",
+      "label": "Footer text size",
+      "min": 14,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "button_text_size",
+      "label": "Button text size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "question_padding",
+      "label": "Question padding",
+      "min": 15,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "footer_padding",
+      "label": "Footer padding",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Icon size",
+      "min": 12,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Button border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "shadow_hover",
+      "label": "Hover shadow",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "0 2px 8px rgba(0,0,0,0.08)",
+          "label": "Subtle"
+        },
+        {
+          "value": "0 4px 16px rgba(0,0,0,0.12)",
+          "label": "Medium"
+        },
+        {
+          "value": "0 8px 24px rgba(0,0,0,0.15)",
+          "label": "Strong"
+        }
+      ],
+      "default": "0 2px 8px rgba(0,0,0,0.08)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Premium FAQ"
+    }
+  ]
+}
+{% endschema %}
