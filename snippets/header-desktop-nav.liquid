@@ -42,69 +42,81 @@
       {%- if is_megamenu -%}
         {%- assign collection_count = 0 -%}
         {%- assign featured_collection = null -%}
+        {%- assign featured_product = null -%}
 
         <div class="site-nav__dropdown megamenu megamenu--modern text-left">
           <div class="page-width">
             <div class="megamenu__layout">
-              {%- comment -%} LEFT COLUMN: Menu Links {%- endcomment -%}
+              {%- comment -%} LEFT COLUMN: Menu Links - Show ALL child links {%- endcomment -%}
               <div class="megamenu__sidebar appear-animation appear-delay-1">
                 {%- for childlink in link.links -%}
-                  {%- if childlink.levels == 0 -%}
-                    <a href="{{ childlink.url }}" class="megamenu__sidebar-link">
-                      <span class="megamenu__sidebar-title">{{ childlink.title }}</span>
-                      {%- if childlink.links.size > 0 -%}
-                        <span class="megamenu__sidebar-subtitle">{{ childlink.links.first.title }}</span>
-                      {%- endif -%}
-                    </a>
-                  {%- endif -%}
+                  <a href="{{ childlink.url }}" class="megamenu__sidebar-link">
+                    <span class="megamenu__sidebar-title">{{ childlink.title }}</span>
+                    {%- if childlink.links.size > 0 -%}
+                      <span class="megamenu__sidebar-subtitle">{{ childlink.links.size }} items</span>
+                    {%- endif -%}
+                  </a>
                 {%- endfor -%}
               </div>
 
-              {%- comment -%} CENTER COLUMN: Collection Images Grid {%- endcomment -%}
+              {%- comment -%} CENTER COLUMN: Collection/Menu Images Grid {%- endcomment -%}
               <div class="megamenu__collections appear-animation appear-delay-2">
                 <div class="megamenu__collections-grid">
                   {%- for childlink in link.links -%}
+                    {%- assign has_image = false -%}
+                    {%- assign tile_image = null -%}
+
+                    {%- comment -%} Try to get image from collection {%- endcomment -%}
                     {%- if childlink.url contains '/collections/' -%}
                       {%- assign col_handle = childlink.object.handle -%}
                       {%- assign col = collections[col_handle] -%}
 
-                      {%- comment -%} Save first collection with image as featured {%- endcomment -%}
-                      {%- if featured_collection == null and col.image != blank -%}
-                        {%- assign featured_collection = col -%}
+                      {%- if col.image != blank -%}
+                        {%- assign tile_image = col.image -%}
+                        {%- assign has_image = true -%}
+                      {%- elsif col.products.first.featured_image != blank -%}
+                        {%- assign tile_image = col.products.first.featured_image -%}
+                        {%- assign has_image = true -%}
                       {%- endif -%}
 
-                      <a href="{{ childlink.url }}" class="megamenu__collection-tile">
-                        <div class="megamenu__collection-image-wrap">
-                          {%- if col.image != blank -%}
-                            <img
-                              src="{{ col.image | img_url: '200x200', crop: 'center' }}"
-                              alt="{{ col.title }}"
-                              class="megamenu__collection-img"
-                              width="90"
-                              height="90"
-                              loading="lazy"
-                            >
-                          {%- elsif col.products.first.featured_image != blank -%}
-                            <img
-                              src="{{ col.products.first.featured_image | img_url: '200x200', crop: 'center' }}"
-                              alt="{{ col.title }}"
-                              class="megamenu__collection-img"
-                              width="90"
-                              height="90"
-                              loading="lazy"
-                            >
-                          {%- else -%}
-                            <div class="megamenu__collection-placeholder">
-                              <svg viewBox="0 0 20 20">
-                                <path d="M15.651 12.851c-2.13 1.94-5.17 2.91-9.07 2.91-.91 0-1.87-.04-2.88-.17-.38-.04-.75-.09-1.12-.16-.03 1.61.21 3.71.54 5.09.01.04.02.09.03.13.02.08.04.14.06.18h.02c.02.03.04.04.05.04h3.49c.12-.09.17-.19.21-.3l.09-.27.15-.51c.07-.25.11-.45.14-.58v-.01l.03-.13.02-.08c.03.05.06.1.1.16.2.31.63.98 1.55 1.68.91.69 2.27 1.36 4.23 1.36 4.84 0 7.11-2.01 7.89-3.56.4-.79.54-1.47.54-1.83 0-.17-.02-.26-.02-.26l-.29-1.53-.6.09c-.44.07-.87.11-1.29.13-.09-.71-.24-1.47-.45-2.2-.1-.32-.21-.63-.33-.92z"/>
-                              </svg>
-                            </div>
-                          {%- endif -%}
-                        </div>
-                        <span class="megamenu__collection-title">{{ childlink.title }}</span>
-                      </a>
-                      {%- assign collection_count = collection_count | plus: 1 -%}
+                      {%- comment -%} Save first collection for featured {%- endcomment -%}
+                      {%- if featured_collection == null and col != blank -%}
+                        {%- assign featured_collection = col -%}
+                      {%- endif -%}
                     {%- endif -%}
+
+                    {%- comment -%} Try to get image from product link {%- endcomment -%}
+                    {%- if has_image == false and childlink.url contains '/products/' -%}
+                      {%- assign prod = childlink.object -%}
+                      {%- if prod.featured_image != blank -%}
+                        {%- assign tile_image = prod.featured_image -%}
+                        {%- assign has_image = true -%}
+                      {%- endif -%}
+                      {%- if featured_product == null -%}
+                        {%- assign featured_product = prod -%}
+                      {%- endif -%}
+                    {%- endif -%}
+
+                    <a href="{{ childlink.url }}" class="megamenu__collection-tile">
+                      <div class="megamenu__collection-image-wrap">
+                        {%- if has_image and tile_image != blank -%}
+                          <img
+                            src="{{ tile_image | img_url: '200x200', crop: 'center' }}"
+                            alt="{{ childlink.title }}"
+                            class="megamenu__collection-img"
+                            width="90"
+                            height="90"
+                            loading="lazy"
+                          >
+                        {%- else -%}
+                          <div class="megamenu__collection-placeholder">
+                            <span class="megamenu__placeholder-text">{{ childlink.title | slice: 0 }}</span>
+                          </div>
+                        {%- endif -%}
+                      </div>
+                      <span class="megamenu__collection-title">{{ childlink.title }}</span>
+                    </a>
+                    {%- assign collection_count = collection_count | plus: 1 -%}
                   {%- endfor -%}
 
                   {%- comment -%} See All tile {%- endcomment -%}
