@@ -6202,9 +6202,6 @@ form+.footer__social {
   color: transparent
 }
 
-.is-light .site-nav__link:hover {
-  color: #fff;
-}
 
 .site-nav--has-dropdown>.site-nav__link {
   position: relative;
