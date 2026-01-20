@@ -6199,7 +6199,7 @@ form+.footer__social {
 }
 
 .is-light .site-nav__link {
-  color: transparent
+  color: none;
 }
 
 

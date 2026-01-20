@@ -28,13 +28,8 @@
       class="site-nav__item site-nav__expanded-item{% if has_dropdown %} site-nav--has-dropdown{% endif %}{% if is_megamenu %} site-nav--is-megamenu{% endif %}"
       {% if has_dropdown %}aria-haspopup="true"{% endif %}>
 
-      <a href="{{ link.url }}" class="site-nav__link site-nav__link--underline{% if has_dropdown %} site-nav__link--has-dropdown{% endif %}{% if forloop.first %} site-nav__link--scribble{% endif %}">
-        <span class="site-nav__link-text">{{ link.title }}</span>
-        {%- if forloop.first -%}
-          <span class="site-nav__scribble">
-            {%- render 'icon-scribble', icon: 'circle' -%}
-          </span>
-        {%- endif -%}
+      <a href="{{ link.url }}" class="site-nav__link site-nav__link--underline{% if has_dropdown %} site-nav__link--has-dropdown{% endif %}">
+        {{ link.title }}
       </a>
       {%- if is_megamenu -%}
         {%- assign previous_column_type = '' -%}
