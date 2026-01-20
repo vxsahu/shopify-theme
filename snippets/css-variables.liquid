@@ -33,42 +33,4 @@
   .placeholder-content {
     background-image: linear-gradient(100deg, {{ settings.color_small_image_bg }} 40%, {{ settings.color_small_image_bg | color_darken: 3 }} 63%, {{ settings.color_small_image_bg }} 79%);
   }
-<<<<<<< HEAD
-
-  /* Scribble Circle Effect for First Nav Link */
-  .site-nav__link--scribble {
-    position: relative;
-  }
-
-  .site-nav__link-text {
-    position: relative;
-    z-index: 2;
-  }
-
-  .site-nav__scribble {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  .site-nav__scribble svg {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 86%;
-    height: 57%;
-    z-index: 0;
-    stroke: {{ settings.color_button }};
-    stroke-width: 8;
-    stroke-dasharray: 1;
-    stroke-dashoffset: 0;
-  }
-=======
->>>>>>> parent of accb5ff (Add scribble effect to first desktop nav link and update About page)
 {%- endstyle -%}
