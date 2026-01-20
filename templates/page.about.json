@@ -1,1 +1,160 @@
-{"sections":{"main":{"type":"main-page","disabled":true,"settings":{}},"slideshow":{"type":"slideshow","blocks":{"slideshow-0":{"type":"image","settings":{"link_text":""}}},"block_order":["slideshow-0"],"settings":{}},"rich-text":{"type":"rich-text","blocks":{"heading":{"type":"heading","settings":{}},"text":{"type":"text","settings":{}}},"block_order":["heading","text"],"settings":{}},"map":{"type":"map","settings":{}},"text-columns":{"type":"text-columns","blocks":{"column1":{"type":"text_block","settings":{}},"column2":{"type":"text_block","settings":{}},"column3":{"type":"text_block","settings":{}}},"block_order":["column1","column2","column3"],"settings":{}},"featured-collection":{"type":"featured-collection","settings":{}},"form":{"type":"contact-form","settings":{}}},"order":["main","slideshow","rich-text","text-columns","map","featured-collection","form"]}
+{
+    "sections": {
+        "main": {
+            "type": "main-page",
+            "settings": {}
+        },
+        "text_and_image_awCdUK": {
+            "type": "text-and-image",
+            "settings": {
+                "image": "shopify:\/\/shop_images\/our-story-bm-t.png",
+                "image_mask": "none",
+                "image2_mask": "none",
+                "image-width": 700,
+                "subtitle": "We are Nataly and Lior",
+                "title": "",
+                "text": "<p>The proud owners and artists of Boho- Magic.<br\/>For more than 15 years we've designed and sell bohemian jewelry all over the world.<\/p><p>We especially love working with silver and draw much of our design inspiration from the striking combination of different metals and gemstones. We're always looking to create something very unique in a modern boho style. We aim to combine our passion and doing good in the world.<\/p><p><strong>We love that our jewelry gets to become<\/strong> part of our clients’ happiest moments (:<\/p><p>In our spare time, you can find us by the ocean. Something about the ocean just recharges and inspires us.<\/p><p>And yes, we are also a couple for 20 years ♥<\/p>",
+                "button_label": "",
+                "button_link": "",
+                "button_style": "primary",
+                "align_text": "left",
+                "image_width": "50",
+                "layout": "left",
+                "divider": false,
+                "top_padding": true,
+                "bottom_padding": true,
+                "lazyload_images": true
+            }
+        },
+        "text_and_image_7XY4Ed": {
+            "type": "text-and-image",
+            "settings": {
+                "image": "shopify:\/\/shop_images\/story-page-us-nat-t.jpg",
+                "image_mask": "none",
+                "image2_mask": "none",
+                "image-width": 400,
+                "subtitle": "",
+                "title": "Nataly Vanunu",
+                "text": "<p>I’m a true creator and even in my spare time, I can be found thinking of new designs.<\/p>",
+                "button_label": "",
+                "button_link": "",
+                "button_style": "primary",
+                "align_text": "left",
+                "image_width": "50",
+                "layout": "right",
+                "divider": false,
+                "top_padding": true,
+                "bottom_padding": true,
+                "lazyload_images": true
+            }
+        },
+        "rich_text_BAKQXM": {
+            "type": "rich-text",
+            "blocks": {
+                "text_z4KQWP": {
+                    "type": "text",
+                    "settings": {
+                        "enlarge_text": false,
+                        "text": "<p><strong>My hobbies: <\/strong>Photography, swimming, travel around the world, go to the beach and snuggling with my cat.<\/p>"
+                    }
+                }
+            },
+            "block_order": [
+                "text_z4KQWP"
+            ],
+            "settings": {
+                "align_text": "center",
+                "narrow_column": true,
+                "divider": false
+            }
+        },
+        "text_and_image_JYqN4E": {
+            "type": "text-and-image",
+            "settings": {
+                "image": "shopify:\/\/shop_images\/this-is-us-boho-magic-liaro.jpg",
+                "image_mask": "none",
+                "image2_mask": "none",
+                "image-width": 400,
+                "subtitle": "",
+                "title": "Lior Abady",
+                "text": "<p>Creativity has been a part of my life since ever. I remember myself as a child always curious and in a look for something new.<\/p>",
+                "button_label": "",
+                "button_link": "",
+                "button_style": "primary",
+                "align_text": "left",
+                "image_width": "50",
+                "layout": "left",
+                "divider": false,
+                "top_padding": true,
+                "bottom_padding": true,
+                "lazyload_images": false
+            }
+        },
+        "rich_text_Wz4KGr": {
+            "type": "rich-text",
+            "blocks": {
+                "text_hqchKV": {
+                    "type": "text",
+                    "settings": {
+                        "enlarge_text": false,
+                        "text": "<p><strong>My hobbies:<\/strong> Play the guitar, cooking, hiking, soccer, yoga and jogging, sitting on the hammock and dream.<br\/><\/p>"
+                    }
+                }
+            },
+            "block_order": [
+                "text_hqchKV"
+            ],
+            "settings": {
+                "align_text": "center",
+                "narrow_column": true,
+                "divider": false
+            }
+        },
+        "rich_text_QbxpBW": {
+            "type": "rich-text",
+            "blocks": {
+                "heading_N9EEg3": {
+                    "type": "heading",
+                    "settings": {
+                        "title": "Our mission is"
+                    }
+                },
+                "text_EP4w4M": {
+                    "type": "text",
+                    "settings": {
+                        "enlarge_text": false,
+                        "text": "<p>to inspire women find their unique voice in the world<\/p>"
+                    }
+                }
+            },
+            "block_order": [
+                "heading_N9EEg3",
+                "text_EP4w4M"
+            ],
+            "settings": {
+                "align_text": "center",
+                "narrow_column": true,
+                "divider": false
+            }
+        },
+        "contact_form_H9DbXp": {
+            "type": "contact-form",
+            "settings": {
+                "title": "Contact us",
+                "text": "",
+                "show_phone": false,
+                "narrow_column": true
+            }
+        }
+    },
+    "order": [
+        "main",
+        "text_and_image_awCdUK",
+        "text_and_image_7XY4Ed",
+        "rich_text_BAKQXM",
+        "text_and_image_JYqN4E",
+        "rich_text_Wz4KGr",
+        "rich_text_QbxpBW",
+        "contact_form_H9DbXp"
+    ]
+}
